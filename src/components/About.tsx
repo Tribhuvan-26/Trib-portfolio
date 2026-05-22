@@ -15,7 +15,7 @@ export function About() {
   return (
     <Section
       id="about"
-      index="002 — about"
+      index="003 — about"
       title="who"
       kicker="A short note on what I do and how I think about building."
     >

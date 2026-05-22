@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 interface Props {
   id: string;
-  index: string;
+  index?: string;
   title: string;
   kicker?: string;
   children: React.ReactNode;

@@ -1,4 +1,3 @@
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Work } from "@/components/Work";
@@ -10,15 +9,12 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
-import { ParticleCanvas } from "@/components/ParticleCanvas";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
       <Cursor />
-      <LoadingScreen />
-      <ParticleCanvas />
       <Nav />
       <main className="relative">
         <Hero />
