@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { social } from "@/config/social";
+import { Logo } from "./Logo";
 
 export function Hero() {
   return (
@@ -34,11 +35,20 @@ export function Hero() {
           001 — index
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 text-accent"
+        >
+          <Logo size={140} interactive />
+        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-4 font-display text-[14vw] font-bold leading-[0.92] tracking-tight text-fg md:text-[10vw]"
+          transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 font-display text-[14vw] font-bold leading-[0.92] tracking-tight text-fg md:text-[10vw]"
         >
           tribhuvan
           <span className="text-accent">.</span>
