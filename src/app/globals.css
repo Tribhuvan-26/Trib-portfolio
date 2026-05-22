@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #050810;
+  --color-bg-soft: #0a0f1c;
+  --color-bg-elev: #111726;
+  --color-fg: #ffffff;
+  --color-fg-muted: #9aa3b2;
+  --color-fg-faint: #4a5365;
+  --color-accent: #1f9bff;
+  --color-accent-strong: #0066ff;
+  --color-accent-glow: rgba(31, 155, 255, 0.5);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-accent: rgba(31, 155, 255, 0.25);
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #050810;
+  color: #ffffff;
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  * {
+    cursor: none;
+  }
+}
+
+::selection {
+  background: rgba(31, 155, 255, 0.45);
+  color: #ffffff;
+}
+
+@keyframes pulse-accent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-accent {
+  animation: pulse-accent 1.8s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes glow-line {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.animate-glow-line {
+  animation: glow-line 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
