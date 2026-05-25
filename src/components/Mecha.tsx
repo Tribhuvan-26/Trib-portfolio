@@ -104,8 +104,15 @@ function GipsyDanger({ theme }: { theme: Theme }) {
     return m;
   }, [scene, animations]);
 
-  useFrame((_, dt) => mixer.update(dt));
-  useEffect(() => () => mixer.stopAllAction(), [mixer]);
+  useFrame((_, dt) => {
+    mixer.update(dt);
+  });
+  useEffect(
+    () => () => {
+      mixer.stopAllAction();
+    },
+    [mixer],
+  );
 
   return <primitive ref={ref} object={scene} />;
 }
