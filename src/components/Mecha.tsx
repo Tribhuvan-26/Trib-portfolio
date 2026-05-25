@@ -65,12 +65,26 @@ function GipsyDanger({ theme }: { theme: Theme }) {
       if (!mesh.isMesh) return;
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       mats.forEach((m) => {
-        const mat = m as THREE.MeshStandardMaterial;
+        const mat = m as THREE.MeshStandardMaterial & {
+          transmission?: number;
+          transmissionMap?: THREE.Texture | null;
+          thickness?: number;
+          ior?: number;
+          alphaMap?: THREE.Texture | null;
+        };
+        // kill every channel that could make a part see-through
         mat.transparent = false;
         mat.opacity = 1;
         mat.depthWrite = true;
         mat.alphaTest = 0;
+        mat.alphaMap = null;
         mat.side = THREE.FrontSide;
+        // MeshPhysicalMaterial-only — Blender BSDF often exports glass-like
+        // transmission on the reactor / helmet which renders the page bg
+        // through them in light mode.
+        if ("transmission" in mat) mat.transmission = 0;
+        if ("transmissionMap" in mat) mat.transmissionMap = null;
+        if ("thickness" in mat) mat.thickness = 0;
 
         if ("roughness" in mat) {
           mat.roughness = 0.45;
