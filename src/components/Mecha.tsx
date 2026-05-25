@@ -1,16 +1,21 @@
 "use client";
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { useFBX } from "@react-three/drei";
 import * as THREE from "three";
 
 const MODEL_URL = "/models/GipsyDanger.fbx";
+const PALETTE_URL = "/models/UV Color Palette.png";
 const EMOTE_CLIP = "Armature|Gipsy.Emote1";
 const TARGET_HEIGHT = 1.7;
 
 function GipsyDanger() {
   const fbx = useFBX(MODEL_URL);
+  // Load the UV palette texture explicitly — relying on FBXLoader to bind it
+  // is unreliable (the FBX embeds an absolute Windows path that doesn't resolve
+  // and the file name contains spaces). Force-apply to every material below.
+  const palette = useLoader(THREE.TextureLoader, PALETTE_URL);
   const ref = useRef<THREE.Group>(null);
 
   // measure-and-fit
@@ -38,11 +43,17 @@ function GipsyDanger() {
     obj.position.z = -center.z;
   }, [fbx]);
 
-  // Apply to EVERY material on the model (phong, lambert, standard, basic).
-  // Meshes with the UV palette map get its colors; meshes without a map get a
-  // dark slate-blue fallback so they don't render white. DoubleSide kills
-  // any thin-piece backface gaps.
+  // Force the palette texture on every material on the model. Palettes use
+  // nearest-filter (no interpolation between cells) and non-flipped UVs (FBX
+  // convention). White diffuse so the palette colors come through unmultiplied.
   useEffect(() => {
+    palette.colorSpace = THREE.SRGBColorSpace;
+    palette.flipY = false;
+    palette.magFilter = THREE.NearestFilter;
+    palette.minFilter = THREE.NearestFilter;
+    palette.generateMipmaps = false;
+    palette.needsUpdate = true;
+
     fbx.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -50,15 +61,14 @@ function GipsyDanger() {
       mats.forEach((m) => {
         const mat = m as THREE.MeshPhongMaterial &
           THREE.MeshStandardMaterial & { map: THREE.Texture | null };
-        if ("color" in mat) {
-          mat.color = new THREE.Color(mat.map ? "#ffffff" : "#3f4e66");
-        }
+        mat.map = palette;
+        if ("color" in mat) mat.color = new THREE.Color("#ffffff");
         if ("emissive" in mat) {
-          mat.emissive = new THREE.Color("#1a2030");
-          mat.emissiveIntensity = 0.4;
+          mat.emissive = new THREE.Color("#0e1320");
+          mat.emissiveIntensity = 0.25;
         }
         if ("shininess" in mat) {
-          (mat as THREE.MeshPhongMaterial).shininess = 18;
+          (mat as THREE.MeshPhongMaterial).shininess = 22;
           (mat as THREE.MeshPhongMaterial).specular = new THREE.Color("#6a7488");
         }
         if ("roughness" in mat) {
@@ -67,17 +77,10 @@ function GipsyDanger() {
         }
         mat.flatShading = false;
         mat.side = THREE.DoubleSide;
-        if (mat.map) {
-          mat.map.colorSpace = THREE.SRGBColorSpace;
-          mat.map.minFilter = THREE.LinearFilter;
-          mat.map.magFilter = THREE.LinearFilter;
-          mat.map.anisotropy = 4;
-          mat.map.needsUpdate = true;
-        }
         mat.needsUpdate = true;
       });
     });
-  }, [fbx]);
+  }, [fbx, palette]);
 
   const mixer = useMemo(() => {
     const m = new THREE.AnimationMixer(fbx);
