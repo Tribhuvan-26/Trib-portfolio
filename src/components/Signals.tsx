@@ -5,8 +5,8 @@ import { social } from "@/config/social";
 import { Section } from "./Section";
 
 export function Signals() {
-  // ghchart — classic GitHub green palette.
-  const chartSrc = `https://ghchart.rshah.org/40c463/${social.githubHandle}`;
+  // ghchart — classic GitHub green palette (reads well on dark bg).
+  const chartSrc = `https://ghchart.rshah.org/26a641/${social.githubHandle}`;
 
   return (
     <Section

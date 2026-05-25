@@ -1,37 +1,36 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* SHATTERDOME PALETTE — light, industrial */
-  --color-bg: #ebe9e2;             /* warm concrete */
-  --color-bg-soft: #dcdad3;        /* deeper concrete */
-  --color-bg-elev: #ffffff;        /* panel / card */
-  --color-fg: #14181f;             /* deep gunmetal text */
-  --color-fg-muted: #4f5663;
-  --color-fg-faint: #8a8f99;
+  /* SHATTERDOME — DARK MODE */
+  --color-bg: #0a0e15;             /* deep storm ink */
+  --color-bg-soft: #11161f;        /* panel back */
+  --color-bg-elev: #1a212c;        /* elevated card */
+  --color-fg: #f4f4ee;             /* warm off-white */
+  --color-fg-muted: #98a0ad;
+  --color-fg-faint: #5a6373;
 
   /* hazard yellow — Gipsy Danger stripe */
   --color-accent: #ffb800;
   --color-accent-strong: #d99500;
   --color-accent-glow: rgba(255, 184, 0, 0.45);
 
-  /* secondary signals */
-  --color-alert: #d4332b;          /* conn-pod red */
-  --color-ocean: #1e4d6b;          /* storm deep */
+  --color-alert: #ff4d4d;          /* conn-pod red */
+  --color-ocean: #4a7da3;          /* storm deep */
 
-  --color-line: rgba(20, 24, 31, 0.12);
-  --color-line-strong: rgba(20, 24, 31, 0.28);
-  --color-line-accent: rgba(255, 184, 0, 0.6);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.22);
+  --color-line-accent: rgba(255, 184, 0, 0.55);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 }
 
-:root { color-scheme: light; }
+:root { color-scheme: dark; }
 
 html, body {
-  background: #ebe9e2;
-  color: #14181f;
+  background: #0a0e15;
+  color: #f4f4ee;
 }
 
 @media (pointer: fine) {
@@ -39,8 +38,8 @@ html, body {
 }
 
 ::selection {
-  background: #14181f;
-  color: #ffb800;
+  background: #ffb800;
+  color: #0a0e15;
 }
 
 /* GIPSY DANGER hazard stripe */
@@ -48,22 +47,22 @@ html, body {
   background-image: repeating-linear-gradient(
     135deg,
     #ffb800 0 14px,
-    #14181f 14px 28px
+    #0a0e15 14px 28px
   );
 }
 .hazard-stripe-thin {
   background-image: repeating-linear-gradient(
     135deg,
     #ffb800 0 6px,
-    #14181f 6px 12px
+    #0a0e15 6px 12px
   );
 }
 
-/* faint blueprint grid backdrop (used sparingly) */
+/* faint blueprint grid backdrop */
 .bp-grid {
   background-image:
-    linear-gradient(rgba(20,24,31,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20,24,31,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 

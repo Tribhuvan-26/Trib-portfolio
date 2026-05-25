@@ -11,17 +11,16 @@ export default async function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#ebe9e2",
+          background: "#0a0e15",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
           fontFamily: "sans-serif",
-          color: "#14181f",
+          color: "#f4f4ee",
           position: "relative",
         }}
       >
-        {/* hazard stripe top */}
         <div
           style={{
             position: "absolute",
@@ -30,7 +29,7 @@ export default async function OG() {
             right: 0,
             height: 14,
             backgroundImage:
-              "repeating-linear-gradient(135deg, #ffb800 0 14px, #14181f 14px 28px)",
+              "repeating-linear-gradient(135deg, #ffb800 0 14px, #0a0e15 14px 28px)",
           }}
         />
 
@@ -39,7 +38,7 @@ export default async function OG() {
             display: "flex",
             justifyContent: "space-between",
             fontSize: 18,
-            color: "#4f5663",
+            color: "#98a0ad",
             letterSpacing: 4,
             marginTop: 14,
           }}
@@ -52,7 +51,7 @@ export default async function OG() {
           <div
             style={{
               fontSize: 18,
-              color: "#14181f",
+              color: "#0a0e15",
               backgroundColor: "#ffb800",
               padding: "4px 10px",
               alignSelf: "flex-start",
@@ -76,7 +75,7 @@ export default async function OG() {
             <span style={{ color: "#ffb800" }}>.</span>
           </div>
           <div
-            style={{ fontSize: 30, color: "#4f5663", marginTop: 18, maxWidth: 980 }}
+            style={{ fontSize: 30, color: "#98a0ad", marginTop: 18, maxWidth: 980 }}
           >
             AI/ML engineer &amp; full-stack pilot — research-flavored systems
             that ship.
@@ -88,7 +87,7 @@ export default async function OG() {
             display: "flex",
             justifyContent: "space-between",
             fontSize: 16,
-            color: "#4f5663",
+            color: "#98a0ad",
             letterSpacing: 4,
             marginBottom: 14,
           }}
@@ -97,7 +96,6 @@ export default async function OG() {
           <span>GITHUB / TRIBHUVAN-26</span>
         </div>
 
-        {/* hazard stripe bottom */}
         <div
           style={{
             position: "absolute",
@@ -106,7 +104,7 @@ export default async function OG() {
             right: 0,
             height: 14,
             backgroundImage:
-              "repeating-linear-gradient(135deg, #ffb800 0 14px, #14181f 14px 28px)",
+              "repeating-linear-gradient(135deg, #ffb800 0 14px, #0a0e15 14px 28px)",
           }}
         />
       </div>

@@ -36,8 +36,9 @@ function GipsyDanger() {
     obj.position.z = -center.z;
   }, [scene]);
 
-  // GLB already binds textures + skinning correctly. Just nudge specular for
-  // a slight metal feel and bump emissive a touch on a light bg.
+  // GLB binds textures + skinning correctly. Force opaque to fix the blank
+  // helmet visor / reactor (those had transparent=true with low opacity from
+  // Blender's Principled BSDF). Boost emissive so reactor glows on dark bg.
   useEffect(() => {
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -45,13 +46,25 @@ function GipsyDanger() {
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       mats.forEach((m) => {
         const mat = m as THREE.MeshStandardMaterial;
+        // force opaque rendering — kills the "invisible reactor/helmet" bug
+        mat.transparent = false;
+        mat.opacity = 1;
+        mat.depthWrite = true;
+        mat.alphaTest = 0;
+        mat.side = THREE.FrontSide;
+
         if ("roughness" in mat) {
           mat.roughness = 0.45;
           mat.metalness = 0.45;
         }
-        if ("emissiveIntensity" in mat) {
-          // lift shadow areas slightly so panel gaps don't crush
-          mat.emissiveIntensity = Math.max(mat.emissiveIntensity ?? 0, 0.15);
+        // boost any material that already has an emissive color (reactor, eyes)
+        const hasEmissive =
+          mat.emissive &&
+          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
+        if (hasEmissive) {
+          mat.emissiveIntensity = Math.max(mat.emissiveIntensity ?? 0, 2.2);
+        } else if ("emissiveIntensity" in mat) {
+          mat.emissiveIntensity = 0.1;
         }
         if (mat.map) {
           mat.map.magFilter = THREE.NearestFilter;
@@ -90,12 +103,12 @@ export function Mecha({ className = "" }: { className?: string }) {
         gl={{ antialias: true, alpha: true, toneMapping: THREE.NoToneMapping }}
         style={{ background: "transparent" }}
       >
-        <hemisphereLight args={["#ffffff", "#e2e0d8", 2.6]} />
-        <ambientLight intensity={1.4} />
-        <directionalLight position={[2, 4, 5]} intensity={2.2} color="#ffffff" />
-        <directionalLight position={[4, 1, 2]} intensity={1.2} color="#ffe9b0" />
-        <directionalLight position={[-4, 1.5, 2]} intensity={1.2} color="#cfe0f2" />
-        <directionalLight position={[0, -3, 3]} intensity={1.2} color="#ffffff" />
+        {/* dark scene — moodier lighting, hazard rim */}
+        <hemisphereLight args={["#cfd6e3", "#0a0e15", 1.0]} />
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[3, 5, 4]} intensity={1.4} color="#ffffff" />
+        <directionalLight position={[-4, 2, 1]} intensity={1.0} color="#ffb800" />
+        <pointLight position={[0, 0.4, 2.5]} intensity={0.8} color="#7fb6ff" />
 
         <Suspense fallback={null}>
           <GipsyDanger />
