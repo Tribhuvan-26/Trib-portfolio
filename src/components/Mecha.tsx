@@ -54,47 +54,90 @@ function GipsyDanger({ theme }: { theme: Theme }) {
     obj.position.z = -center.z;
   }, [scene]);
 
-  // GLB binds textures + skinning correctly. Force opaque to fix the blank
-  // helmet visor / reactor. Emissive intensity scales with theme: bolder
-  // glow on dark, restrained on light so the reactor doesn't blow out.
+  // Force every material opaque + adequately lit so reactor/helmet visor
+  // never go blank. Emissive-tagged parts (reactor core, eyes) get hard-
+  // overridden to an unlit basic material — guarantees they always glow
+  // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const emissiveBoost = theme === "dark" ? 2.4 : 0.9;
-    const emissiveFloor = theme === "dark" ? 0.1 : 0.0;
+    const emissiveBoost = 2.6;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
+      mesh.visible = true;
+      mesh.frustumCulled = true;
+      mesh.renderOrder = 0;
+
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      mats.forEach((m) => {
+      mats.forEach((m, idx) => {
         const mat = m as THREE.MeshStandardMaterial & {
           transmission?: number;
           transmissionMap?: THREE.Texture | null;
           thickness?: number;
-          ior?: number;
           alphaMap?: THREE.Texture | null;
         };
-        // kill every channel that could make a part see-through
+        const hasEmissive =
+          mat.emissive &&
+          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
+
+        // Replace glow parts with an unlit basic material that uses the
+        // emissive color scaled — they pop on every theme and lighting.
+        if (hasEmissive) {
+          const glow = mat.emissive
+            .clone()
+            .multiplyScalar(Math.max(1, mat.emissiveIntensity ?? 1));
+          // clamp to displayable
+          glow.r = Math.min(1, Math.max(0, glow.r));
+          glow.g = Math.min(1, Math.max(0, glow.g));
+          glow.b = Math.min(1, Math.max(0, glow.b));
+          const basic = new THREE.MeshBasicMaterial({
+            color: glow,
+            map: mat.map ?? null,
+            transparent: false,
+            opacity: 1,
+            depthWrite: true,
+            side: THREE.FrontSide,
+            toneMapped: false,
+          });
+          if (Array.isArray(mesh.material)) {
+            (mesh.material as THREE.Material[])[idx] = basic;
+          } else {
+            mesh.material = basic;
+          }
+          mesh.renderOrder = 1;
+          // boost intensity in dark mode by overdriving the color
+          if (theme === "dark") {
+            basic.color = glow.clone().multiplyScalar(emissiveBoost / 1.6);
+            // clamp again
+            basic.color.r = Math.min(1, basic.color.r);
+            basic.color.g = Math.min(1, basic.color.g);
+            basic.color.b = Math.min(1, basic.color.b);
+          }
+          return;
+        }
+
+        // Non-glow parts: force fully opaque, kill transmission/alpha
         mat.transparent = false;
         mat.opacity = 1;
         mat.depthWrite = true;
         mat.alphaTest = 0;
         mat.alphaMap = null;
         mat.side = THREE.FrontSide;
-        // MeshPhysicalMaterial-only — Blender BSDF often exports glass-like
-        // transmission on the reactor / helmet which renders the page bg
-        // through them in light mode.
         if ("transmission" in mat) mat.transmission = 0;
         if ("transmissionMap" in mat) mat.transmissionMap = null;
         if ("thickness" in mat) mat.thickness = 0;
 
+        // floor color so panels with pure-black diffuse don't disappear on
+        // light bg
+        if ("color" in mat && mat.color) {
+          const c = mat.color;
+          if (c.r + c.g + c.b < 0.15) {
+            c.setRGB(0.15, 0.18, 0.25);
+          }
+        }
+
         if ("roughness" in mat) {
           mat.roughness = 0.45;
-          mat.metalness = 0.45;
-        }
-        const hasEmissive =
-          mat.emissive &&
-          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
-        if ("emissiveIntensity" in mat) {
-          mat.emissiveIntensity = hasEmissive ? emissiveBoost : emissiveFloor;
+          mat.metalness = 0.4;
         }
         if (mat.map) {
           mat.map.magFilter = THREE.NearestFilter;
