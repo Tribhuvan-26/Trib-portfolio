@@ -5,9 +5,8 @@ import { social } from "@/config/social";
 import { Section } from "./Section";
 
 export function Signals() {
-  // ghchart — themed contribution SVG. Hex without `#`. Use deep ink so it
-  // sits well on the light concrete bg.
-  const chartSrc = `https://ghchart.rshah.org/14181f/${social.githubHandle}`;
+  // ghchart — classic GitHub green palette.
+  const chartSrc = `https://ghchart.rshah.org/40c463/${social.githubHandle}`;
 
   return (
     <Section
