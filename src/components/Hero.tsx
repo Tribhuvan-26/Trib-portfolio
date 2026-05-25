@@ -116,7 +116,6 @@ export function Hero() {
           <p className="max-w-xl font-display text-lg leading-relaxed text-fg-muted md:text-xl">
             Building research-flavored systems that ship — from ResNet
             classifiers to AR furniture pipelines to institutional platforms.
-            Currently mentoring 30+ students at CIE-MLRIT.
           </p>
 
           <div className="mt-3 flex flex-wrap gap-3">
