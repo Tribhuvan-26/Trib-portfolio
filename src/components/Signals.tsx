@@ -5,15 +5,19 @@ import dynamic from "next/dynamic";
 import { social } from "@/config/social";
 import { Section } from "./Section";
 
-// client-only — calendar fetches from GitHub via useEffect, no SSR needed
-const GitHubCalendar = dynamic(() => import("react-github-calendar"), {
-  ssr: false,
-  loading: () => (
-    <div className="font-mono text-[10px] tracking-widest text-fg-faint">
-      // SYNCING GITHUB FEED…
-    </div>
-  ),
-});
+// client-only — calendar fetches from GitHub via useEffect, no SSR needed.
+// Resolve `.default` explicitly so dynamic gets a component, not the module.
+const GitHubCalendar = dynamic(
+  () => import("react-github-calendar").then((m) => m.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="font-mono text-[10px] tracking-widest text-fg-faint">
+        // SYNCING GITHUB FEED…
+      </div>
+    ),
+  },
+);
 
 // Match the look of github.com's contribution graph (dark mode greens).
 const GITHUB_DARK_THEME = {
