@@ -5,10 +5,11 @@ import dynamic from "next/dynamic";
 import { social } from "@/config/social";
 import { Section } from "./Section";
 
-// client-only — calendar fetches from GitHub via useEffect, no SSR needed.
-// Resolve `.default` explicitly so dynamic gets a component, not the module.
+// client-only — the package exports `GitHubCalendar` as a named export
+// (not default). Wrap as { default } so next/dynamic accepts it.
 const GitHubCalendar = dynamic(
-  () => import("react-github-calendar").then((m) => m.default),
+  () =>
+    import("react-github-calendar").then((m) => ({ default: m.GitHubCalendar })),
   {
     ssr: false,
     loading: () => (
