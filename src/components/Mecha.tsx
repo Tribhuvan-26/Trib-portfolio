@@ -1,24 +1,18 @@
 "use client";
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useFBX } from "@react-three/drei";
 import * as THREE from "three";
 
 const MODEL_URL = "/models/GipsyDanger.fbx";
-const PALETTE_URL = "/models/UV Color Palette.png";
 const EMOTE_CLIP = "Armature|Gipsy.Emote1";
 const TARGET_HEIGHT = 1.7;
 
 function GipsyDanger() {
   const fbx = useFBX(MODEL_URL);
-  // Load the UV palette texture explicitly — relying on FBXLoader to bind it
-  // is unreliable (the FBX embeds an absolute Windows path that doesn't resolve
-  // and the file name contains spaces). Force-apply to every material below.
-  const palette = useLoader(THREE.TextureLoader, PALETTE_URL);
   const ref = useRef<THREE.Group>(null);
 
-  // measure-and-fit
   useLayoutEffect(() => {
     const obj = ref.current;
     if (!obj) return;
@@ -43,17 +37,9 @@ function GipsyDanger() {
     obj.position.z = -center.z;
   }, [fbx]);
 
-  // Force the palette texture on every material on the model. Palettes use
-  // nearest-filter (no interpolation between cells) and non-flipped UVs (FBX
-  // convention). White diffuse so the palette colors come through unmultiplied.
+  // Use whatever texture FBXLoader bound (UVs were authored for it). Just
+  // tune color/emissive/specular for the light bg. Don't replace the map.
   useEffect(() => {
-    palette.colorSpace = THREE.SRGBColorSpace;
-    palette.flipY = false;
-    palette.magFilter = THREE.NearestFilter;
-    palette.minFilter = THREE.NearestFilter;
-    palette.generateMipmaps = false;
-    palette.needsUpdate = true;
-
     fbx.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -61,15 +47,16 @@ function GipsyDanger() {
       mats.forEach((m) => {
         const mat = m as THREE.MeshPhongMaterial &
           THREE.MeshStandardMaterial & { map: THREE.Texture | null };
-        mat.map = palette;
-        if ("color" in mat) mat.color = new THREE.Color("#ffffff");
+        if ("color" in mat) {
+          mat.color = new THREE.Color(mat.map ? "#ffffff" : "#3f4e66");
+        }
         if ("emissive" in mat) {
-          mat.emissive = new THREE.Color("#0e1320");
-          mat.emissiveIntensity = 0.25;
+          mat.emissive = new THREE.Color("#10141f");
+          mat.emissiveIntensity = 0.3;
         }
         if ("shininess" in mat) {
           (mat as THREE.MeshPhongMaterial).shininess = 22;
-          (mat as THREE.MeshPhongMaterial).specular = new THREE.Color("#6a7488");
+          (mat as THREE.MeshPhongMaterial).specular = new THREE.Color("#5e6878");
         }
         if ("roughness" in mat) {
           (mat as THREE.MeshStandardMaterial).roughness = 0.55;
@@ -77,19 +64,26 @@ function GipsyDanger() {
         }
         mat.flatShading = false;
         mat.side = THREE.DoubleSide;
+        mat.vertexColors = false;
+        if (mat.map) {
+          mat.map.colorSpace = THREE.SRGBColorSpace;
+          mat.map.magFilter = THREE.NearestFilter;
+          mat.map.minFilter = THREE.NearestFilter;
+          mat.map.generateMipmaps = false;
+          mat.map.needsUpdate = true;
+        }
         mat.needsUpdate = true;
       });
     });
-  }, [fbx, palette]);
+  }, [fbx]);
 
   const mixer = useMemo(() => {
     const m = new THREE.AnimationMixer(fbx);
+    m.timeScale = 0.6; // 60% speed — slowed but visibly moving
     const clip =
       fbx.animations.find((c) => c.name === EMOTE_CLIP) ?? fbx.animations[0];
     if (clip) {
-      const action = m.clipAction(clip).reset().setLoop(THREE.LoopRepeat, Infinity);
-      action.setEffectiveTimeScale(0.45);
-      action.play();
+      m.clipAction(clip).reset().setLoop(THREE.LoopRepeat, Infinity).play();
     }
     return m;
   }, [fbx]);
@@ -109,16 +103,12 @@ export function Mecha({ className = "" }: { className?: string }) {
         gl={{ antialias: true, alpha: true, toneMapping: THREE.NoToneMapping }}
         style={{ background: "transparent" }}
       >
-        <hemisphereLight args={["#ffffff", "#e2e0d8", 4.0]} />
-        <ambientLight intensity={2.6} />
-        {/* soft key from front-above */}
-        <directionalLight position={[2, 4, 5]} intensity={2.2} color="#ffffff" />
-        {/* warm fill from screen-right */}
-        <directionalLight position={[4, 1, 2]} intensity={1.2} color="#ffe9b0" />
-        {/* cool fill from screen-left */}
-        <directionalLight position={[-4, 1.5, 2]} intensity={1.2} color="#cfe0f2" />
-        {/* under-lift so legs don't go black */}
-        <directionalLight position={[0, -3, 3]} intensity={1.6} color="#ffffff" />
+        <hemisphereLight args={["#ffffff", "#e2e0d8", 3.5]} />
+        <ambientLight intensity={2.2} />
+        <directionalLight position={[2, 4, 5]} intensity={2.5} color="#ffffff" />
+        <directionalLight position={[4, 1, 2]} intensity={1.3} color="#ffe9b0" />
+        <directionalLight position={[-4, 1.5, 2]} intensity={1.3} color="#cfe0f2" />
+        <directionalLight position={[0, -3, 3]} intensity={1.4} color="#ffffff" />
 
         <Suspense fallback={null}>
           <GipsyDanger />
