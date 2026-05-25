@@ -2,17 +2,17 @@
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useFBX } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-const MODEL_URL = "/models/GipsyDanger.fbx";
-const EMOTE_CLIP = "Armature|Gipsy.Emote1";
+const MODEL_URL = "/models/GipsyDanger.glb";
 const TARGET_HEIGHT = 1.7;
 
 function GipsyDanger() {
-  const fbx = useFBX(MODEL_URL);
+  const { scene, animations } = useGLTF(MODEL_URL);
   const ref = useRef<THREE.Group>(null);
 
+  // auto-fit
   useLayoutEffect(() => {
     const obj = ref.current;
     if (!obj) return;
@@ -22,7 +22,6 @@ function GipsyDanger() {
 
     const box = new THREE.Box3().setFromObject(obj);
     if (!isFinite(box.min.x)) return;
-
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
@@ -35,39 +34,26 @@ function GipsyDanger() {
     obj.position.x = -center.x;
     obj.position.y = -center.y;
     obj.position.z = -center.z;
-  }, [fbx]);
+  }, [scene]);
 
-  // Use whatever texture FBXLoader bound (UVs were authored for it). Just
-  // tune color/emissive/specular for the light bg. Don't replace the map.
+  // GLB already binds textures + skinning correctly. Just nudge specular for
+  // a slight metal feel and bump emissive a touch on a light bg.
   useEffect(() => {
-    fbx.traverse((o) => {
+    scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       mats.forEach((m) => {
-        const mat = m as THREE.MeshPhongMaterial &
-          THREE.MeshStandardMaterial & { map: THREE.Texture | null };
-        if ("color" in mat) {
-          mat.color = new THREE.Color(mat.map ? "#ffffff" : "#3f4e66");
-        }
-        if ("emissive" in mat) {
-          mat.emissive = new THREE.Color("#10141f");
-          mat.emissiveIntensity = 0.3;
-        }
-        if ("shininess" in mat) {
-          (mat as THREE.MeshPhongMaterial).shininess = 22;
-          (mat as THREE.MeshPhongMaterial).specular = new THREE.Color("#5e6878");
-        }
+        const mat = m as THREE.MeshStandardMaterial;
         if ("roughness" in mat) {
-          (mat as THREE.MeshStandardMaterial).roughness = 0.55;
-          (mat as THREE.MeshStandardMaterial).metalness = 0.35;
+          mat.roughness = 0.45;
+          mat.metalness = 0.45;
         }
-        mat.flatShading = false;
-        mat.side = THREE.DoubleSide;
-        mat.vertexColors = false;
+        if ("emissiveIntensity" in mat) {
+          // lift shadow areas slightly so panel gaps don't crush
+          mat.emissiveIntensity = Math.max(mat.emissiveIntensity ?? 0, 0.15);
+        }
         if (mat.map) {
-          mat.map.colorSpace = THREE.SRGBColorSpace;
-          mat.map.flipY = false; // FBX UV convention — picks correct palette row
           mat.map.magFilter = THREE.NearestFilter;
           mat.map.minFilter = THREE.NearestFilter;
           mat.map.generateMipmaps = false;
@@ -76,23 +62,23 @@ function GipsyDanger() {
         mat.needsUpdate = true;
       });
     });
-  }, [fbx]);
+  }, [scene]);
 
   const mixer = useMemo(() => {
-    const m = new THREE.AnimationMixer(fbx);
-    m.timeScale = 0.6; // 60% speed — slowed but visibly moving
-    const clip =
-      fbx.animations.find((c) => c.name === EMOTE_CLIP) ?? fbx.animations[0];
-    if (clip) {
-      m.clipAction(clip).reset().setLoop(THREE.LoopRepeat, Infinity).play();
+    const m = new THREE.AnimationMixer(scene);
+    m.timeScale = 0.6;
+    const emote =
+      animations.find((c) => /emote/i.test(c.name)) ?? animations[0];
+    if (emote) {
+      m.clipAction(emote).reset().setLoop(THREE.LoopRepeat, Infinity).play();
     }
     return m;
-  }, [fbx]);
+  }, [scene, animations]);
 
   useFrame((_, dt) => mixer.update(dt));
   useEffect(() => () => mixer.stopAllAction(), [mixer]);
 
-  return <primitive ref={ref} object={fbx} />;
+  return <primitive ref={ref} object={scene} />;
 }
 
 export function Mecha({ className = "" }: { className?: string }) {
@@ -104,12 +90,12 @@ export function Mecha({ className = "" }: { className?: string }) {
         gl={{ antialias: true, alpha: true, toneMapping: THREE.NoToneMapping }}
         style={{ background: "transparent" }}
       >
-        <hemisphereLight args={["#ffffff", "#e2e0d8", 3.5]} />
-        <ambientLight intensity={2.2} />
-        <directionalLight position={[2, 4, 5]} intensity={2.5} color="#ffffff" />
-        <directionalLight position={[4, 1, 2]} intensity={1.3} color="#ffe9b0" />
-        <directionalLight position={[-4, 1.5, 2]} intensity={1.3} color="#cfe0f2" />
-        <directionalLight position={[0, -3, 3]} intensity={1.4} color="#ffffff" />
+        <hemisphereLight args={["#ffffff", "#e2e0d8", 2.6]} />
+        <ambientLight intensity={1.4} />
+        <directionalLight position={[2, 4, 5]} intensity={2.2} color="#ffffff" />
+        <directionalLight position={[4, 1, 2]} intensity={1.2} color="#ffe9b0" />
+        <directionalLight position={[-4, 1.5, 2]} intensity={1.2} color="#cfe0f2" />
+        <directionalLight position={[0, -3, 3]} intensity={1.2} color="#ffffff" />
 
         <Suspense fallback={null}>
           <GipsyDanger />
@@ -119,4 +105,4 @@ export function Mecha({ className = "" }: { className?: string }) {
   );
 }
 
-useFBX.preload(MODEL_URL);
+useGLTF.preload(MODEL_URL);
