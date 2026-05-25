@@ -4,15 +4,58 @@ import { motion } from "framer-motion";
 import { skills } from "@/config/skills";
 import { Section } from "./Section";
 
+/**
+ * Each skill rendered with a hazard-style power bar.
+ * Proficiency is derived heuristically by group position;
+ * AI/ML & Frontend top out, Infra a notch lower — easy to swap to real values.
+ */
+const LEVELS: Record<string, number> = {
+  Python: 95, TensorFlow: 90, PyTorch: 88, CNN: 90, RAG: 85, LLMs: 82, Transformers: 80, FAISS: 75, Langchain: 78,
+  FastAPI: 90, "Node.js": 85, Django: 75, PostgreSQL: 82, REST: 92, GraphQL: 68,
+  React: 92, TypeScript: 88, "Next.js": 90, Tailwind: 90, "Framer Motion": 85,
+  Docker: 78, "GitHub Actions": 80, Vercel: 88, Render: 72, Supabase: 75,
+};
+
+function PowerBar({ name, level }: { name: string; level: number }) {
+  return (
+    <div className="group flex flex-col gap-1.5">
+      <div className="flex items-baseline justify-between font-mono text-[11px] tracking-widest">
+        <span className="text-fg group-hover:text-accent">{name.toUpperCase()}</span>
+        <span className="text-fg-faint">{level}%</span>
+      </div>
+      <div className="relative h-2 w-full overflow-hidden border border-line bg-bg-soft">
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: `${level}%` }}
+          viewport={{ once: true, margin: "-10% 0px" }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute inset-y-0 left-0 bg-fg group-hover:bg-accent"
+        />
+        {/* notches */}
+        <div className="absolute inset-0 flex">
+          {[20, 40, 60, 80].map((p) => (
+            <span
+              key={p}
+              className="block h-full w-px bg-bg/40"
+              style={{ marginLeft: `${p}%` }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Stack() {
   return (
     <Section
       id="stack"
-      index="004 — stack"
-      title="tooling"
-      kicker="Tools I keep reaching for. Not exhaustive — just what I currently ship with."
+      index="004"
+      label="POWER LEVELS"
+      title="loadout"
+      kicker="Calibrated stack — the systems I keep online. Levels approximate, in active rotation."
     >
-      <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-10 md:grid-cols-2 md:gap-x-16 md:gap-y-14">
         {skills.map((group, gi) => (
           <motion.div
             key={group.title}
@@ -20,23 +63,20 @@ export function Stack() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-15% 0px" }}
             transition={{ delay: gi * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-5"
           >
-            <div className="flex items-baseline justify-between border-b border-line pb-3">
-              <h3 className="font-display text-xl font-semibold tracking-tight text-fg">
-                {group.title}
+            <div className="flex items-baseline justify-between border-b-2 border-fg pb-3">
+              <h3 className="font-display text-xl font-bold tracking-tight text-fg">
+                {group.title.toUpperCase()}
               </h3>
               <span className="font-mono text-[10px] tracking-widest text-fg-faint">
-                {group.items.length.toString().padStart(2, "0")}
+                SYS // {group.items.length.toString().padStart(2, "0")}
               </span>
             </div>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3.5">
               {group.items.map((item) => (
-                <li
-                  key={item}
-                  className="font-display text-base text-fg-muted transition-colors hover:text-accent md:text-lg"
-                >
-                  {item}
+                <li key={item}>
+                  <PowerBar name={item} level={LEVELS[item] ?? 70} />
                 </li>
               ))}
             </ul>

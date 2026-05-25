@@ -43,9 +43,10 @@ export function Contact() {
   return (
     <Section
       id="contact"
-      index="007 — contact"
+      index="007"
+      label="ESTABLISH TRANSMISSION"
       title="reach"
-      kicker="Best places to find me. Or use the form."
+      kicker="Direct comms or the form. Either lands in the same inbox."
     >
       <div className="grid gap-12 md:grid-cols-[1fr_1.2fr] md:gap-20">
         {/* left: direct links */}
@@ -54,25 +55,30 @@ export function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15% 0px" }}
           transition={{ duration: 0.7 }}
-          className="flex flex-col gap-3"
+          className="relative flex flex-col gap-1 border border-line bg-bg-elev p-2"
         >
+          <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
+            // DIRECT CHANNELS
+          </span>
           {[
-            { label: "Email", value: social.email, href: `mailto:${social.email}` },
-            { label: "GitHub", value: `@${social.githubHandle}`, href: social.github },
-            { label: "LinkedIn", value: "profile", href: social.linkedin },
-            { label: "Twitter / X", value: "profile", href: social.twitter },
-          ].map((l) => (
+            { label: "EMAIL", value: social.email, href: `mailto:${social.email}` },
+            { label: "GITHUB", value: `@${social.githubHandle}`, href: social.github },
+            { label: "LINKEDIN", value: "profile", href: social.linkedin },
+            { label: "TWITTER / X", value: "profile", href: social.twitter },
+          ].map((l, idx) => (
             <a
               key={l.label}
               href={l.href}
               target={l.href.startsWith("mailto:") ? undefined : "_blank"}
               rel="noopener noreferrer"
-              className="group flex items-baseline justify-between border-b border-line py-3 transition-colors hover:border-accent"
+              className={`group flex items-baseline justify-between px-4 py-4 transition-colors hover:bg-accent ${
+                idx > 0 ? "border-t border-line" : ""
+              }`}
             >
-              <span className="font-mono text-[11px] uppercase tracking-widest text-fg-faint">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-fg-faint group-hover:text-fg">
                 {l.label}
               </span>
-              <span className="flex items-center gap-2 font-display text-base text-fg group-hover:text-accent md:text-lg">
+              <span className="flex items-center gap-2 font-display text-base text-fg md:text-lg">
                 {l.value}
                 <ArrowUpRight size={16} />
               </span>
@@ -89,48 +95,48 @@ export function Contact() {
           onSubmit={onSubmit}
           className="flex flex-col gap-5"
         >
-          <Field label="Name">
+          <Field label="CALL SIGN">
             <input
               required
               name="name"
               autoComplete="name"
-              className="w-full border-b border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-accent md:text-lg"
+              className="w-full border-b-2 border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-fg md:text-lg"
               placeholder="who are you?"
             />
           </Field>
-          <Field label="Email">
+          <Field label="RETURN FREQUENCY">
             <input
               required
               type="email"
               name="email"
               autoComplete="email"
-              className="w-full border-b border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-accent md:text-lg"
+              className="w-full border-b-2 border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-fg md:text-lg"
               placeholder="how do I reach you?"
             />
           </Field>
-          <Field label="Message">
+          <Field label="PAYLOAD">
             <textarea
               required
               name="message"
               rows={4}
-              className="w-full resize-none border-b border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-accent md:text-lg"
-              placeholder="what's on your mind?"
+              className="w-full resize-none border-b-2 border-line bg-transparent py-3 font-display text-base text-fg outline-none transition-colors focus:border-fg md:text-lg"
+              placeholder="what's the transmission?"
             />
           </Field>
 
           {!ENDPOINT && (
             <div className="font-mono text-[10px] tracking-widest text-fg-faint">
-              demo mode · set NEXT_PUBLIC_FORMSPREE_ID for live submission
+              // DEMO MODE — SET NEXT_PUBLIC_FORMSPREE_ID FOR LIVE
             </div>
           )}
 
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="group mt-4 inline-flex items-center gap-3 self-start border border-accent bg-transparent px-6 py-3 font-mono text-xs tracking-widest text-accent transition-all hover:bg-accent hover:text-bg disabled:opacity-50"
+            className="group mt-4 inline-flex items-center gap-3 self-start border-2 border-fg bg-fg px-6 py-3 font-mono text-xs tracking-widest text-bg transition-all hover:bg-accent hover:text-fg disabled:opacity-50"
           >
-            {status === "submitting" ? "sending…" : "send message"}
-            <ArrowUpRight size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            {status === "submitting" ? "TRANSMITTING…" : "SEND TRANSMISSION"}
+            <ArrowUpRight size={14} />
           </button>
 
           <AnimatePresence>
@@ -139,9 +145,9 @@ export function Contact() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="font-mono text-xs tracking-widest text-accent"
+                className="font-mono text-xs tracking-widest text-fg"
               >
-                ✓ message received — I&apos;ll get back to you
+                ✓ TRANSMISSION RECEIVED — STAND BY FOR RESPONSE
               </motion.div>
             )}
             {status === "error" && (
@@ -149,9 +155,9 @@ export function Contact() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="font-mono text-xs tracking-widest text-red-400"
+                className="font-mono text-xs tracking-widest text-alert"
               >
-                ✗ failed — {error}
+                ✗ TRANSMISSION FAILED — {error}
               </motion.div>
             )}
           </AnimatePresence>

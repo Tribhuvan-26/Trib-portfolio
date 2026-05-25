@@ -4,33 +4,37 @@ import { motion } from "framer-motion";
 
 interface Props {
   id: string;
-  index?: string;
+  index: string;
+  label: string;
   title: string;
   kicker?: string;
   children: React.ReactNode;
   className?: string;
 }
 
-/** Shared section shell — numbered kicker, big title, content. */
-export function Section({ id, index, title, kicker, children, className = "" }: Props) {
+/**
+ * Shatterdome-style section header: numbered chip + uppercase label + big title.
+ */
+export function Section({ id, index, label, title, kicker, children, className = "" }: Props) {
   return (
     <section
       id={id}
       className={`relative border-t border-line px-6 py-24 md:px-10 md:py-32 ${className}`}
     >
-      <div className="mx-auto max-w-[1400px]">
+      <div className="mx-auto max-w-[1500px]">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15% 0px" }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between"
+          className="mb-14 flex flex-col gap-6 md:mb-20 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <div className="font-mono text-xs tracking-[0.3em] text-fg-faint">
-              {index}
+            <div className="flex items-center gap-3 font-mono text-[11px] tracking-widest">
+              <span className="bg-fg px-2 py-1 text-bg">{index}</span>
+              <span className="text-fg-muted">{label}</span>
             </div>
-            <h2 className="mt-3 font-display text-5xl font-bold leading-none tracking-tight text-fg md:text-7xl">
+            <h2 className="mt-5 font-display text-5xl font-bold leading-[0.95] tracking-tight text-fg md:text-7xl">
               {title}
               <span className="text-accent">.</span>
             </h2>

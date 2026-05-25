@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Logo } from "./Logo";
 
 const NAV = [
-  { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
-  { label: "Stack", href: "#stack" },
-  { label: "Contact", href: "#contact" },
+  { id: "01", label: "Deployed Units", href: "#work" },
+  { id: "02", label: "Pilot Dossier", href: "#about" },
+  { id: "03", label: "Loadout", href: "#stack" },
+  { id: "04", label: "Kaiju Log", href: "#trajectory" },
+  { id: "05", label: "Transmission", href: "#contact" },
 ];
 
 export function Nav() {
@@ -26,27 +26,35 @@ export function Nav() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all ${
         scrolled
-          ? "border-b border-line bg-bg/80 backdrop-blur-md"
+          ? "border-b border-line bg-bg-elev/85 backdrop-blur-md"
           : "border-b border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-6 md:px-10">
-        <a href="#top" className="flex items-center gap-3 text-accent">
-          <Logo size={26} />
-          <span className="font-display text-sm font-medium tracking-wide text-fg">
-            tribhuvan
+      <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-6 md:px-10">
+        <a href="#top" className="flex items-center gap-3">
+          <span
+            aria-hidden
+            className="hazard-stripe-thin block h-5 w-5"
+          />
+          <span className="font-display text-sm font-bold tracking-widest text-fg">
+            TRIBHUVAN
+          </span>
+          <span className="hidden font-mono text-[10px] tracking-widest text-fg-faint md:inline">
+            / PILOT 01
           </span>
         </a>
 
-        <nav className="hidden gap-10 md:flex">
+        <nav className="hidden gap-8 md:flex">
           {NAV.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              className="group relative font-display text-sm tracking-wide text-fg-muted transition-colors hover:text-fg"
+              className="group flex items-baseline gap-2 font-mono text-[11px] tracking-widest text-fg-muted transition-colors hover:text-fg"
             >
-              {n.label}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all group-hover:w-full" />
+              <span className="text-fg-faint group-hover:text-accent">
+                {n.id}
+              </span>
+              <span className="uppercase">{n.label}</span>
             </a>
           ))}
         </nav>
@@ -60,15 +68,19 @@ export function Nav() {
         </button>
       </div>
 
+      {/* always-on hazard hairline */}
+      <div className="h-1 hazard-stripe-thin" aria-hidden />
+
       {open && (
-        <nav className="flex flex-col gap-6 border-t border-line bg-bg-soft px-6 py-8 md:hidden">
+        <nav className="flex flex-col gap-6 border-t border-line bg-bg-elev px-6 py-8 md:hidden">
           {NAV.map((n) => (
             <a
               key={n.href}
               href={n.href}
               onClick={() => setOpen(false)}
-              className="font-display text-base tracking-wide text-fg-muted hover:text-accent"
+              className="flex items-baseline gap-3 font-mono text-sm uppercase tracking-widest text-fg-muted hover:text-fg"
             >
+              <span className="text-accent">{n.id}</span>
               {n.label}
             </a>
           ))}

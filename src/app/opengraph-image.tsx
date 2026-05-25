@@ -11,48 +11,104 @@ export default async function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#050810",
+          background: "#ebe9e2",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
           fontFamily: "sans-serif",
-          color: "#ffffff",
+          color: "#14181f",
+          position: "relative",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 18, color: "#9aa3b2", letterSpacing: 4 }}>
-          <span>● available</span>
-          <span>portfolio · v2</span>
+        {/* hazard stripe top */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 14,
+            backgroundImage:
+              "repeating-linear-gradient(135deg, #ffb800 0 14px, #14181f 14px 28px)",
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 18,
+            color: "#4f5663",
+            letterSpacing: 4,
+            marginTop: 14,
+          }}
+        >
+          <span>PILOT 01 // IDENTITY</span>
+          <span>JAEGER MK-III</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 18, color: "#4a5365", letterSpacing: 6 }}>
-            001 — INDEX
+          <div
+            style={{
+              fontSize: 18,
+              color: "#14181f",
+              backgroundColor: "#ffb800",
+              padding: "4px 10px",
+              alignSelf: "flex-start",
+              letterSpacing: 4,
+            }}
+          >
+            001 / OPERATOR DOSSIER
           </div>
           <div
             style={{
               fontSize: 200,
-              lineHeight: 0.92,
+              lineHeight: 0.85,
               fontWeight: 800,
               letterSpacing: -4,
-              marginTop: 18,
+              marginTop: 22,
               display: "flex",
               alignItems: "baseline",
             }}
           >
             tribhuvan
-            <span style={{ color: "#1f9bff" }}>.</span>
+            <span style={{ color: "#ffb800" }}>.</span>
           </div>
-          <div style={{ fontSize: 32, color: "#9aa3b2", marginTop: 16, maxWidth: 900 }}>
-            ai/ml engineer & full-stack developer — building research-flavored
-            products.
+          <div
+            style={{ fontSize: 30, color: "#4f5663", marginTop: 18, maxWidth: 980 }}
+          >
+            AI/ML engineer &amp; full-stack pilot — research-flavored systems
+            that ship.
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 16, color: "#4a5365", letterSpacing: 4 }}>
-          <span>tribhuvan-26 · github</span>
-          <span>2026</span>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 16,
+            color: "#4f5663",
+            letterSpacing: 4,
+            marginBottom: 14,
+          }}
+        >
+          <span>SHATTERDOME // BUILT IN THE BAY</span>
+          <span>GITHUB / TRIBHUVAN-26</span>
         </div>
+
+        {/* hazard stripe bottom */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 14,
+            backgroundImage:
+              "repeating-linear-gradient(135deg, #ffb800 0 14px, #14181f 14px 28px)",
+          }}
+        />
       </div>
     ),
     size,

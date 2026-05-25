@@ -18,11 +18,7 @@ export function Cursor() {
       return;
     }
 
-    let rx = 0,
-      ry = 0,
-      mx = 0,
-      my = 0;
-    let raf = 0;
+    let rx = 0, ry = 0, mx = 0, my = 0, raf = 0;
 
     const onMove = (e: PointerEvent) => {
       mx = e.clientX;
@@ -36,8 +32,8 @@ export function Cursor() {
     };
 
     const tick = () => {
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
+      rx += (mx - rx) * 0.2;
+      ry += (my - ry) * 0.2;
       if (ring.current)
         ring.current.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
       if (dot.current)
@@ -60,18 +56,21 @@ export function Cursor() {
       <div
         ref={ring}
         aria-hidden
-        className={`pointer-events-none fixed left-0 top-0 z-[90] rounded-full border transition-[width,height,border-color,background-color] duration-200 ease-out ${
+        className={`pointer-events-none fixed left-0 top-0 z-[90] transition-[width,height,border-color] duration-200 ease-out ${
           hovering
-            ? "h-12 w-12 border-accent bg-accent/10"
-            : "h-7 w-7 border-fg/40"
+            ? "h-10 w-10 border-2 border-accent"
+            : "h-6 w-6 border border-fg/60"
         }`}
-        style={{ mixBlendMode: "difference" }}
+        style={{
+          mixBlendMode: "difference",
+          background: hovering ? "rgba(255,184,0,0.12)" : "transparent",
+        }}
       />
       <div
         ref={dot}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[91] h-1 w-1 rounded-full bg-accent"
-        style={{ boxShadow: "0 0 8px #1f9bff" }}
+        className="pointer-events-none fixed left-0 top-0 z-[91] h-1.5 w-1.5 bg-accent"
+        style={{ boxShadow: "0 0 6px rgba(255,184,0,0.7)" }}
       />
     </>
   );
