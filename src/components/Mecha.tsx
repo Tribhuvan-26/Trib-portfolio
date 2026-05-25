@@ -67,6 +67,7 @@ function GipsyDanger() {
         mat.vertexColors = false;
         if (mat.map) {
           mat.map.colorSpace = THREE.SRGBColorSpace;
+          mat.map.flipY = false; // FBX UV convention — picks correct palette row
           mat.map.magFilter = THREE.NearestFilter;
           mat.map.minFilter = THREE.NearestFilter;
           mat.map.generateMipmaps = false;
