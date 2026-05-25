@@ -26,7 +26,13 @@ function useDocTheme(): Theme {
   return theme;
 }
 
-function GipsyDanger({ theme }: { theme: Theme }) {
+function GipsyDanger({
+  theme,
+  clip: requested,
+}: {
+  theme: Theme;
+  clip: string;
+}) {
   const { scene, animations } = useGLTF(MODEL_URL);
   const ref = useRef<THREE.Group>(null);
 
@@ -126,13 +132,13 @@ function GipsyDanger({ theme }: { theme: Theme }) {
         if ("transmissionMap" in mat) mat.transmissionMap = null;
         if ("thickness" in mat) mat.thickness = 0;
 
-        // floor color so panels with pure-black diffuse don't disappear on
-        // light bg
+        // floor near-black & ceiling near-white so panels don't disappear
+        // against either theme's bg
         if ("color" in mat && mat.color) {
           const c = mat.color;
-          if (c.r + c.g + c.b < 0.15) {
-            c.setRGB(0.15, 0.18, 0.25);
-          }
+          const sum = c.r + c.g + c.b;
+          if (sum < 0.15) c.setRGB(0.15, 0.18, 0.25);
+          else if (sum > 2.7) c.setRGB(0.4, 0.45, 0.55);
         }
 
         if ("roughness" in mat) {
@@ -152,14 +158,25 @@ function GipsyDanger({ theme }: { theme: Theme }) {
 
   const mixer = useMemo(() => {
     const m = new THREE.AnimationMixer(scene);
-    m.timeScale = 0.6;
-    const emote =
-      animations.find((c) => /emote/i.test(c.name)) ?? animations[0];
-    if (emote) {
-      m.clipAction(emote).reset().setLoop(THREE.LoopRepeat, Infinity).play();
-    }
+    m.timeScale = 0.7;
     return m;
-  }, [scene, animations]);
+  }, [scene]);
+
+  // switch which clip is active whenever `requested` changes
+  const activeAction = useRef<THREE.AnimationAction | null>(null);
+  useEffect(() => {
+    const rx = new RegExp(requested, "i");
+    const clip =
+      animations.find((c) => rx.test(c.name)) ?? animations[0];
+    if (!clip) return;
+    const next = mixer.clipAction(clip);
+    next.reset().setLoop(THREE.LoopRepeat, Infinity);
+    if (activeAction.current && activeAction.current !== next) {
+      next.crossFadeFrom(activeAction.current, 0.35, false);
+    }
+    next.play();
+    activeAction.current = next;
+  }, [requested, mixer, animations]);
 
   useFrame((_, dt) => {
     mixer.update(dt);
@@ -197,7 +214,13 @@ function SceneLights({ theme }: { theme: Theme }) {
   );
 }
 
-export function Mecha({ className = "" }: { className?: string }) {
+export function Mecha({
+  className = "",
+  clip = "emote",
+}: {
+  className?: string;
+  clip?: string;
+}) {
   const theme = useDocTheme();
   return (
     <div className={className}>
@@ -209,7 +232,7 @@ export function Mecha({ className = "" }: { className?: string }) {
       >
         <SceneLights theme={theme} />
         <Suspense fallback={null}>
-          <GipsyDanger theme={theme} />
+          <GipsyDanger theme={theme} clip={clip} />
         </Suspense>
       </Canvas>
     </div>

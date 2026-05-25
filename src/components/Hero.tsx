@@ -1,9 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown } from "lucide-react";
 import { Mecha } from "./Mecha";
 import { ShiftingText } from "./ShiftingText";
+
+const CLIPS: { id: string; label: string }[] = [
+  { id: "emote", label: "EMOTE" },
+  { id: "idle", label: "IDLE" },
+  { id: "walk", label: "WALK" },
+  { id: "run", label: "RUN" },
+];
 
 const TICKER = [
   "SYSTEMS ONLINE",
@@ -26,6 +34,7 @@ function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
 }
 
 export function Hero() {
+  const [clip, setClip] = useState<string>("emote");
   return (
     <section
       id="top"
@@ -59,13 +68,31 @@ export function Hero() {
           </div>
 
           {/* the mecha canvas */}
-          <Mecha className="absolute inset-0" />
+          <Mecha className="absolute inset-0" clip={clip} />
+
+          {/* clip controls */}
+          <div className="absolute bottom-16 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+            {CLIPS.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setClip(c.id)}
+                className={`border px-3 py-1.5 font-mono text-[10px] tracking-widest transition-colors ${
+                  clip === c.id
+                    ? "border-accent bg-accent text-bg"
+                    : "border-line bg-bg-elev/70 text-fg-muted hover:border-fg hover:text-fg"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
 
           {/* bottom readouts */}
           <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-10 flex items-end justify-between font-mono text-[10px] leading-relaxed tracking-widest text-fg-muted">
             <div>
               <div>COORD / 35.4N 139.5E</div>
-              <div className="text-alert">◢ KAIJU CAT-IV</div>
+              <div className="text-alert">◢ {clip.toUpperCase()}</div>
             </div>
             <div className="text-right">
               <div>POWER / 98%</div>
