@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown } from "lucide-react";
 import { Mecha } from "./Mecha";
+import { DecryptedText } from "./DecryptedText";
 
 const TICKER = [
   "SYSTEMS ONLINE",
@@ -91,7 +92,7 @@ export function Hero() {
           </div>
 
           <h1 className="font-display text-[18vw] font-bold leading-[0.85] tracking-tight text-fg md:text-[10vw] lg:text-[8.5vw]">
-            tribhuvan
+            <DecryptedText text="tribhuvan" duration={1300} speed={40} />
             <span className="text-accent">.</span>
           </h1>
 
