@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { skills } from "@/config/skills";
 import { Section } from "./Section";
+import { TechIcon, hasIcon } from "./TechIcon";
 
 /**
  * Each skill rendered with a hazard-style power bar.
@@ -10,17 +11,26 @@ import { Section } from "./Section";
  * AI/ML & Frontend top out, Infra a notch lower — easy to swap to real values.
  */
 const LEVELS: Record<string, number> = {
-  Python: 95, TensorFlow: 90, PyTorch: 88, CNN: 90, RAG: 85, LLMs: 82, Transformers: 80, FAISS: 75, Langchain: 78,
-  FastAPI: 90, "Node.js": 85, Django: 75, PostgreSQL: 82, REST: 92, GraphQL: 68,
-  React: 92, TypeScript: 88, "Next.js": 90, Tailwind: 90, "Framer Motion": 85,
-  Docker: 78, "GitHub Actions": 80, Vercel: 88, Render: 72, Supabase: 75,
+  // Languages
+  Python: 92, TypeScript: 88, JavaScript: 88, Java: 70, C: 75, "C#": 78,
+  // AI/ML
+  PyTorch: 88, "Transfer Learning": 85, ResNet: 85, "Grad-CAM": 80,
+  "scikit-learn": 82, "Computer Vision": 84,
+  // Web
+  React: 92, "Next.js": 90, Vite: 85, FastAPI: 88, Supabase: 86, Tailwind: 92,
+  // Tools
+  Unity: 75, AutoCAD: 78, "Fusion 360": 72, "3D Modelling": 70,
+  "IoT Systems": 75, "Augmented Reality": 78,
 };
 
 function PowerBar({ name, level }: { name: string; level: number }) {
   return (
     <div className="group flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between font-mono text-[11px] tracking-widest">
-        <span className="text-fg group-hover:text-accent">{name.toUpperCase()}</span>
+        <span className="inline-flex items-center gap-2 text-fg group-hover:text-accent">
+          {hasIcon(name) && <TechIcon name={name} size={13} className="text-accent" />}
+          {name.toUpperCase()}
+        </span>
         <span className="text-fg-faint">{level}%</span>
       </div>
       <div className="relative h-2 w-full overflow-hidden border border-line bg-bg-soft">

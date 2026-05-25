@@ -1,7 +1,7 @@
 export interface KaijuEntry {
   /** kaiju codename — sci-fi handle for the project */
   codename: string;
-  /** date defeated */
+  /** date defeated / engaged */
   date: string;
   /** Pacific Rim category I–V (higher = bigger threat) */
   category: 1 | 2 | 3 | 4 | 5;
@@ -17,43 +17,43 @@ export interface KaijuEntry {
 
 export const trajectory: KaijuEntry[] = [
   {
-    codename: "GRIDLOCK",
-    date: "2025",
-    category: 3,
-    jaeger: "Event Management System",
-    location: "Sector / Next.js Bay",
+    codename: "CAMPUSWRAITH",
+    date: "2026",
+    category: 4,
+    jaeger: "Campus Companion",
+    location: "Sector / Institutional Grid",
     summary:
-      "Full-stack registration and check-in platform. Currently in conn-pod handshake — Prisma data model + Next.js App Router architecture in final calibration.",
+      "Full-stack breach across attendance, grades, and HOD admin workflows. 117+ commits, role-based defenses for students, faculty, and HODs. Live deployment serving 30+ active operators.",
     status: "IN PURSUIT",
   },
   {
-    codename: "TOMEBREAKER",
-    date: "2024 Q3",
-    category: 2,
-    jaeger: "BEFA Study Guide",
-    location: "Sector / Open Repos",
-    summary:
-      "Authored an open BEFA study guide using matplotlib + ReportLab. Deployed to public bay — 500+ downloads.",
-    status: "DEFEATED",
-  },
-  {
-    codename: "VECTRA",
-    date: "2024 Q2",
-    category: 3,
-    jaeger: "RAG Workshop Chatbot",
-    location: "Sector / Live Workshop",
-    summary:
-      "Solo-piloted a FAISS-backed retrieval chatbot for a live workshop. 1K+ neural queries answered before the kaiju was downed.",
-    status: "DEFEATED",
-  },
-  {
     codename: "MELANOSAUR",
-    date: "2024 Q1",
+    date: "2026",
     category: 4,
-    jaeger: "Skin Cancer Classifier",
+    jaeger: "DermAI",
     location: "Sector / Dermoscopic Trench",
     summary:
-      "Led a 4-pilot drift. CNN trained on 50K dermoscopic images, transfer learning from EfficientNet-B3. Hit 94% accuracy under cat-IV breach conditions.",
+      "ResNet50 transfer-learning classifier on HAM10000. Pinned the kaiju at ~85% validation accuracy / 0.93 macro AUC across 7 lesion classes. Grad-CAM explainability armed and operational.",
     status: "DEFEATED",
+  },
+  {
+    codename: "FURBISH",
+    date: "2025",
+    category: 2,
+    jaeger: "Into Furbish",
+    location: "Sector / Augmented Reality",
+    summary:
+      "Unity AR strike — 3D furniture placement, scaling, and layout preview piped through a mobile camera. Lightweight engagement, clean takedown.",
+    status: "DEFEATED",
+  },
+  {
+    codename: "CIE-MENTOR",
+    date: "2025 Aug — Present",
+    category: 3,
+    jaeger: "CIE-MLRIT Upskilling Program",
+    location: "Sector / Dundigal Shatterdome",
+    summary:
+      "Scaled a technical upskilling program for 30+ student pilots across IoT, vibe coding, CAD, and additive manufacturing — 40% lift in project delivery rate. Cross-functional drift mentoring.",
+    status: "IN PURSUIT",
   },
 ];

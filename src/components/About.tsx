@@ -6,8 +6,9 @@ import { Section } from "./Section";
 
 const VITALS = [
   { label: "LOCATION", value: social.location },
-  { label: "DISCIPLINE", value: "AI / ML · Full-Stack" },
-  { label: "CURRENT OP", value: "Portfolio v2" },
+  { label: "DISCIPLINE", value: "AI/ML · Full-Stack · IoT" },
+  { label: "INSTITUTION", value: "B.Tech CSE @ MLRIT" },
+  { label: "CURRENT OP", value: "Tech Mentor @ CIE-MLRIT" },
   { label: "DRIFT STATUS", value: "Open to collab" },
 ];
 
@@ -33,10 +34,15 @@ export function About() {
           </p>
           <p>
             I like work that lives at the seam between research and production:
-            classifiers that ship, retrieval pipelines that hold under load,
-            interfaces that respect the operator&apos;s attention. The good
-            stuff usually shows up when those three meet — and someone has to
-            be in the conn-pod when they do.
+            ResNet classifiers with Grad-CAM explainability, Next.js + Supabase
+            platforms running in prod, AR pipelines in Unity. The good stuff
+            usually shows up when those three meet.
+          </p>
+          <p>
+            Day job: mentoring 30+ students at CIE-MLRIT across IoT, vibe-coding,
+            CAD, and additive manufacturing — pushed project delivery rate up
+            40% and shipped a Python application serving 30+ institutional
+            users.
           </p>
         </motion.div>
 

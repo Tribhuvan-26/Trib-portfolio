@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { projects, type Project } from "@/config/projects";
 import { Section } from "./Section";
+import { TechIcon } from "./TechIcon";
 
 const STATUS_FROM_ROLE: Record<string, { tag: string; tone: "active" | "deployed" | "classified" }> = {
   "Team Lead": { tag: "ACTIVE", tone: "active" },
@@ -71,8 +72,9 @@ function Unit({ project, index }: { project: Project; index: number }) {
           {project.stack.map((s) => (
             <span
               key={s}
-              className="border border-line bg-bg px-2.5 py-1 font-mono text-[10px] tracking-wider text-fg-muted"
+              className="inline-flex items-center gap-1.5 border border-line bg-bg px-2.5 py-1 font-mono text-[10px] tracking-wider text-fg-muted"
             >
+              <TechIcon name={s} size={12} className="text-fg" />
               {s}
             </span>
           ))}

@@ -5,19 +5,40 @@ export interface SkillGroup {
 
 export const skills: SkillGroup[] = [
   {
+    title: "Languages",
+    items: ["Python", "TypeScript", "JavaScript", "Java", "C", "C#"],
+  },
+  {
     title: "AI / ML",
-    items: ["Python", "TensorFlow", "PyTorch", "CNN", "RAG", "LLMs", "Transformers", "FAISS", "Langchain"],
+    items: [
+      "PyTorch",
+      "Transfer Learning",
+      "ResNet",
+      "Grad-CAM",
+      "scikit-learn",
+      "Computer Vision",
+    ],
   },
   {
-    title: "Backend",
-    items: ["FastAPI", "Node.js", "Django", "PostgreSQL", "REST", "GraphQL"],
+    title: "Web & Frameworks",
+    items: [
+      "React",
+      "Next.js",
+      "Vite",
+      "FastAPI",
+      "Supabase",
+      "Tailwind",
+    ],
   },
   {
-    title: "Frontend",
-    items: ["React", "TypeScript", "Next.js", "Tailwind", "Framer Motion"],
-  },
-  {
-    title: "Infra",
-    items: ["Docker", "GitHub Actions", "Vercel", "Render", "Supabase"],
+    title: "Design & Tools",
+    items: [
+      "Unity",
+      "AutoCAD",
+      "Fusion 360",
+      "3D Modelling",
+      "IoT Systems",
+      "Augmented Reality",
+    ],
   },
 ];

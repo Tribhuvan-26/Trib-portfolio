@@ -11,35 +11,42 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "skin-cnn",
-    year: "2024",
-    title: "Skin Cancer Classifier",
+    id: "campus-companion",
+    year: "2026",
+    title: "Campus Companion",
     summary:
-      "Deep CNN classifying dermoscopic images across 7 lesion classes. Transfer learning from EfficientNet-B3, focal loss for class imbalance, Grad-CAM for clinical interpretability.",
-    role: "Team Lead",
-    stack: ["Python", "TensorFlow", "Keras", "OpenCV"],
-    metric: "94% accuracy",
-    links: [{ label: "GitHub", href: "https://github.com/Tribhuvan-26" }],
-  },
-  {
-    id: "rag-chatbot",
-    year: "2024",
-    title: "RAG Workshop Chatbot",
-    summary:
-      "FAISS-backed retrieval-augmented chatbot using sentence-transformer embeddings and Gemini as the generator. Deployed for a live workshop, fielded 1K+ queries.",
+      "Full-stack platform digitizing attendance, grades, and HOD admin workflows for an institutional client. Role-based access for students, faculty, and HODs — 117+ commits on the active codebase, deployed to production.",
     role: "Solo",
-    stack: ["FastAPI", "FAISS", "Gemini", "React"],
-    metric: "1K+ queries served",
-    links: [{ label: "GitHub", href: "https://github.com/Tribhuvan-26" }],
+    stack: ["TypeScript", "Next.js", "Supabase", "Tailwind"],
+    metric: "30+ active users",
+    links: [
+      { label: "Live", href: "https://campus-companion-mu.vercel.app" },
+    ],
   },
   {
-    id: "event-mgmt",
-    year: "2025",
-    title: "Event Management System",
+    id: "derm-ai",
+    year: "2026",
+    title: "DermAI",
     summary:
-      "Full-stack registration and check-in platform. Currently in design phase — Prisma data model and Next.js App Router architecture sketched.",
+      "Dermoscopic image classifier on HAM10000 using ResNet50 transfer learning. Integrated Grad-CAM explainability with a React + FastAPI app — drag-and-drop uploads, real-time confidence visualizations across 7 lesion classes.",
+    role: "Team Lead",
+    stack: ["Python", "PyTorch", "FastAPI", "React", "Grad-CAM"],
+    metric: "~85% acc · 0.93 AUC",
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/Tribhuvan-26/DermAI-SkinCancerDetection",
+      },
+    ],
+  },
+  {
+    id: "into-furbish",
+    year: "2025",
+    title: "Into Furbish",
+    summary:
+      "AR furniture visualization app built in Unity — place and customize 3D furniture in real spaces via mobile camera. Implemented 3D model interaction, scaling, and placement for real-time layout previews.",
     role: "Architect",
-    stack: ["Next.js", "PostgreSQL", "Prisma"],
+    stack: ["Unity", "C#", "Augmented Reality"],
     links: [],
   },
 ];

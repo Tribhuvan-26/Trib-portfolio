@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -8,7 +8,25 @@ import * as THREE from "three";
 const MODEL_URL = "/models/GipsyDanger.glb";
 const TARGET_HEIGHT = 1.7;
 
-function GipsyDanger() {
+type Theme = "light" | "dark";
+
+function useDocTheme(): Theme {
+  const [theme, setTheme] = useState<Theme>("dark");
+  useEffect(() => {
+    const read = () =>
+      (document.documentElement.getAttribute("data-theme") as Theme) || "dark";
+    setTheme(read());
+    const obs = new MutationObserver(() => setTheme(read()));
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => obs.disconnect();
+  }, []);
+  return theme;
+}
+
+function GipsyDanger({ theme }: { theme: Theme }) {
   const { scene, animations } = useGLTF(MODEL_URL);
   const ref = useRef<THREE.Group>(null);
 
@@ -37,16 +55,17 @@ function GipsyDanger() {
   }, [scene]);
 
   // GLB binds textures + skinning correctly. Force opaque to fix the blank
-  // helmet visor / reactor (those had transparent=true with low opacity from
-  // Blender's Principled BSDF). Boost emissive so reactor glows on dark bg.
+  // helmet visor / reactor. Emissive intensity scales with theme: bolder
+  // glow on dark, restrained on light so the reactor doesn't blow out.
   useEffect(() => {
+    const emissiveBoost = theme === "dark" ? 2.4 : 0.9;
+    const emissiveFloor = theme === "dark" ? 0.1 : 0.0;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       mats.forEach((m) => {
         const mat = m as THREE.MeshStandardMaterial;
-        // force opaque rendering — kills the "invisible reactor/helmet" bug
         mat.transparent = false;
         mat.opacity = 1;
         mat.depthWrite = true;
@@ -57,14 +76,11 @@ function GipsyDanger() {
           mat.roughness = 0.45;
           mat.metalness = 0.45;
         }
-        // boost any material that already has an emissive color (reactor, eyes)
         const hasEmissive =
           mat.emissive &&
           (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
-        if (hasEmissive) {
-          mat.emissiveIntensity = Math.max(mat.emissiveIntensity ?? 0, 2.2);
-        } else if ("emissiveIntensity" in mat) {
-          mat.emissiveIntensity = 0.1;
+        if ("emissiveIntensity" in mat) {
+          mat.emissiveIntensity = hasEmissive ? emissiveBoost : emissiveFloor;
         }
         if (mat.map) {
           mat.map.magFilter = THREE.NearestFilter;
@@ -75,7 +91,7 @@ function GipsyDanger() {
         mat.needsUpdate = true;
       });
     });
-  }, [scene]);
+  }, [scene, theme]);
 
   const mixer = useMemo(() => {
     const m = new THREE.AnimationMixer(scene);
@@ -94,7 +110,31 @@ function GipsyDanger() {
   return <primitive ref={ref} object={scene} />;
 }
 
+function SceneLights({ theme }: { theme: Theme }) {
+  if (theme === "light") {
+    return (
+      <>
+        <hemisphereLight args={["#ffffff", "#d6d4cc", 2.6]} />
+        <ambientLight intensity={1.4} />
+        <directionalLight position={[3, 5, 4]} intensity={2.4} color="#ffffff" />
+        <directionalLight position={[-3, 2, 2]} intensity={1.2} color="#ffe9b0" />
+        <directionalLight position={[0, -3, 3]} intensity={1.2} color="#ffffff" />
+      </>
+    );
+  }
+  return (
+    <>
+      <hemisphereLight args={["#cfd6e3", "#0a0e15", 1.0]} />
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[3, 5, 4]} intensity={1.4} color="#ffffff" />
+      <directionalLight position={[-4, 2, 1]} intensity={1.0} color="#ffb800" />
+      <pointLight position={[0, 0.4, 2.5]} intensity={0.8} color="#7fb6ff" />
+    </>
+  );
+}
+
 export function Mecha({ className = "" }: { className?: string }) {
+  const theme = useDocTheme();
   return (
     <div className={className}>
       <Canvas
@@ -103,15 +143,9 @@ export function Mecha({ className = "" }: { className?: string }) {
         gl={{ antialias: true, alpha: true, toneMapping: THREE.NoToneMapping }}
         style={{ background: "transparent" }}
       >
-        {/* dark scene — moodier lighting, hazard rim */}
-        <hemisphereLight args={["#cfd6e3", "#0a0e15", 1.0]} />
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[3, 5, 4]} intensity={1.4} color="#ffffff" />
-        <directionalLight position={[-4, 2, 1]} intensity={1.0} color="#ffb800" />
-        <pointLight position={[0, 0.4, 2.5]} intensity={0.8} color="#7fb6ff" />
-
+        <SceneLights theme={theme} />
         <Suspense fallback={null}>
-          <GipsyDanger />
+          <GipsyDanger theme={theme} />
         </Suspense>
       </Canvas>
     </div>

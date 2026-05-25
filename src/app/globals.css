@@ -1,36 +1,72 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* SHATTERDOME — DARK MODE */
-  --color-bg: #0a0e15;             /* deep storm ink */
-  --color-bg-soft: #11161f;        /* panel back */
-  --color-bg-elev: #1a212c;        /* elevated card */
-  --color-fg: #f4f4ee;             /* warm off-white */
-  --color-fg-muted: #98a0ad;
-  --color-fg-faint: #5a6373;
-
-  /* hazard yellow — Gipsy Danger stripe */
-  --color-accent: #ffb800;
-  --color-accent-strong: #d99500;
-  --color-accent-glow: rgba(255, 184, 0, 0.45);
-
-  --color-alert: #ff4d4d;          /* conn-pod red */
-  --color-ocean: #4a7da3;          /* storm deep */
-
-  --color-line: rgba(255, 255, 255, 0.08);
-  --color-line-strong: rgba(255, 255, 255, 0.22);
-  --color-line-accent: rgba(255, 184, 0, 0.55);
+  /* color tokens — resolved per-theme below via the data-theme attribute */
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-bg-elev: var(--bg-elev);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-glow: var(--accent-glow);
+  --color-alert: var(--alert);
+  --color-ocean: var(--ocean);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-accent: var(--line-accent);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 }
 
-:root { color-scheme: dark; }
+/* SHATTERDOME — DARK MODE (default) */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0e15;
+  --bg-soft: #11161f;
+  --bg-elev: #1a212c;
+  --fg: #f4f4ee;
+  --fg-muted: #98a0ad;
+  --fg-faint: #5a6373;
+  --accent: #ffb800;
+  --accent-strong: #d99500;
+  --accent-glow: rgba(255, 184, 0, 0.45);
+  --alert: #ff4d4d;
+  --ocean: #4a7da3;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --line-accent: rgba(255, 184, 0, 0.55);
+  --hazard-dark-stop: #0a0e15;
+}
+
+/* SHATTERDOME — LIGHT MODE (concrete hangar) */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ebe9e2;
+  --bg-soft: #dcdad3;
+  --bg-elev: #ffffff;
+  --fg: #14181f;
+  --fg-muted: #4f5663;
+  --fg-faint: #8a8f99;
+  --accent: #ffb800;
+  --accent-strong: #d99500;
+  --accent-glow: rgba(255, 184, 0, 0.45);
+  --alert: #d4332b;
+  --ocean: #1e4d6b;
+  --line: rgba(20, 24, 31, 0.12);
+  --line-strong: rgba(20, 24, 31, 0.28);
+  --line-accent: rgba(255, 184, 0, 0.6);
+  --hazard-dark-stop: #14181f;
+}
 
 html, body {
-  background: #0a0e15;
-  color: #f4f4ee;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @media (pointer: fine) {
@@ -42,19 +78,19 @@ html, body {
   color: #0a0e15;
 }
 
-/* GIPSY DANGER hazard stripe */
+/* GIPSY DANGER hazard stripe — dark stop adapts to theme */
 .hazard-stripe {
   background-image: repeating-linear-gradient(
     135deg,
-    #ffb800 0 14px,
-    #0a0e15 14px 28px
+    var(--accent) 0 14px,
+    var(--hazard-dark-stop) 14px 28px
   );
 }
 .hazard-stripe-thin {
   background-image: repeating-linear-gradient(
     135deg,
-    #ffb800 0 6px,
-    #0a0e15 6px 12px
+    var(--accent) 0 6px,
+    var(--hazard-dark-stop) 6px 12px
   );
 }
 
