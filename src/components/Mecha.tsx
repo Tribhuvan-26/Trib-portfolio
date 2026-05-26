@@ -159,9 +159,16 @@ function GipsyDanger({
         mat.needsUpdate = true;
       });
     });
-    // One-time dump: open DevTools console, copy this table, paste back to
-    // refine the GLOW_NAMES regex to target reactor / visor by exact name.
-    console.table(dump);
+    // copyable list of every mesh name in the model
+    console.log("[mecha] mesh names:\n" + dump.map((d) => `${d.mesh}  |  ${d.mat}`).join("\n"));
+    // candidates likely to be reactor / visor (no texture map or odd color)
+    console.log(
+      "[mecha] glow candidates:\n" +
+        dump
+          .filter((d) => !d.map || d.emissive !== "0.00,0.00,0.00")
+          .map((d) => `${d.mesh}  |  ${d.mat}  |  emissive=${d.emissive}  |  map=${d.map}`)
+          .join("\n"),
+    );
   }, [scene, theme]);
 
   const mixer = useMemo(() => {
