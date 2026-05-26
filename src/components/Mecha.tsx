@@ -65,7 +65,8 @@ function GipsyDanger({
   // overridden to an unlit basic material — guarantees they always glow
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const emissiveBoost = 2.6;
+    const ACCENT = new THREE.Color("#ffb800");
+    const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow/i;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -82,25 +83,39 @@ function GipsyDanger({
           alphaMap?: THREE.Texture | null;
         };
         const hasEmissive =
-          mat.emissive &&
+          !!mat.emissive &&
           (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
+        const hasTransmission =
+          ("transmission" in mat && (mat.transmission ?? 0) > 0.01) ||
+          ("transmissionMap" in mat && !!mat.transmissionMap);
+        const nameHit =
+          GLOW_NAMES.test(mesh.name || "") || GLOW_NAMES.test(mat.name || "");
+        const isGlow = hasEmissive || hasTransmission || nameHit;
 
-        // Replace glow parts with an unlit basic material that uses the
-        // emissive color scaled — they pop on every theme and lighting.
-        if (hasEmissive) {
-          const glow = mat.emissive
-            .clone()
-            .multiplyScalar(Math.max(1, mat.emissiveIntensity ?? 1));
-          // clamp to displayable
+        // Replace glow parts (reactor, helmet visor, eyes) with an unlit
+        // basic material so they always pop, regardless of theme/lighting.
+        if (isGlow) {
+          let glow: THREE.Color;
+          if (hasEmissive) {
+            glow = mat.emissive
+              .clone()
+              .multiplyScalar(Math.max(1, mat.emissiveIntensity ?? 1));
+            // if emissive ended up near-black/near-white, fall back to accent
+            const sum = glow.r + glow.g + glow.b;
+            if (sum < 0.2 || sum > 2.7) glow = ACCENT.clone();
+          } else {
+            glow = ACCENT.clone();
+          }
           glow.r = Math.min(1, Math.max(0, glow.r));
           glow.g = Math.min(1, Math.max(0, glow.g));
           glow.b = Math.min(1, Math.max(0, glow.b));
           const basic = new THREE.MeshBasicMaterial({
             color: glow,
-            map: mat.map ?? null,
+            map: null,
             transparent: false,
             opacity: 1,
             depthWrite: true,
+            depthTest: true,
             side: THREE.FrontSide,
             toneMapped: false,
           });
@@ -109,15 +124,7 @@ function GipsyDanger({
           } else {
             mesh.material = basic;
           }
-          mesh.renderOrder = 1;
-          // boost intensity in dark mode by overdriving the color
-          if (theme === "dark") {
-            basic.color = glow.clone().multiplyScalar(emissiveBoost / 1.6);
-            // clamp again
-            basic.color.r = Math.min(1, basic.color.r);
-            basic.color.g = Math.min(1, basic.color.g);
-            basic.color.b = Math.min(1, basic.color.b);
-          }
+          mesh.renderOrder = 2;
           return;
         }
 
