@@ -65,7 +65,7 @@ function GipsyDanger({
   // overridden to an unlit basic material — guarantees they always glow
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const ACCENT = new THREE.Color("#ffb800");
+    const ACCENT = new THREE.Color("#a86b00");
     const REACTOR_NAMES = /spinning_blade/i;
     const GLASS_NAMES = /visor|helmet|eye|glass|lens|hud/i;
     scene.traverse((o) => {
@@ -102,7 +102,7 @@ function GipsyDanger({
           if ("color" in mat && mat.color) mat.color.copy(ACCENT);
           if ("emissive" in mat && mat.emissive) {
             mat.emissive.copy(ACCENT);
-            mat.emissiveIntensity = 0.9;
+            mat.emissiveIntensity = 0.4;
           }
           mat.transparent = false;
           mat.opacity = 1;
