@@ -113,20 +113,25 @@ export function Hero() {
             <span>ABOUT</span>
           </div>
 
+          <div className="flex items-baseline gap-3 font-display text-xl text-fg-muted md:text-2xl">
+            <span className="h-px w-8 self-center bg-fg" aria-hidden />
+            <span>Hi, I&apos;m</span>
+          </div>
+
           <h1 className="font-display text-[20vw] font-bold leading-[0.85] tracking-tight text-fg md:text-[11.5vw] lg:text-[9.5vw]">
             tribhuvan
             <span className="text-accent">.</span>
           </h1>
 
           <div className="flex flex-wrap items-baseline gap-3 font-display text-2xl text-fg-muted md:text-3xl">
-            <span>Hi, I&apos;m</span>
+            <span>a</span>
             <ShiftingText
               words={[
+                "Developer",
                 "Ranger",
                 "K-Sci",
                 "J-Tech",
                 "Drift-Compatible",
-                "Conn-Pod Crew",
                 "Architect",
               ]}
               className="font-bold text-accent"
@@ -145,19 +150,22 @@ export function Hero() {
             classifiers to AR furniture pipelines to institutional platforms.
           </p>
 
-          <div className="mt-3 flex flex-wrap gap-3">
+          <div className="mt-3 flex flex-wrap items-center gap-4">
+            <span className="font-display text-lg font-medium text-fg md:text-xl">
+              Need a developer?
+            </span>
             <a
-              href="#work"
+              href="#contact"
               className="group inline-flex items-center gap-2 border-2 border-fg bg-fg px-5 py-3 font-mono text-xs tracking-widest text-bg transition-colors hover:bg-accent hover:text-fg"
             >
-              DEPLOYED UNITS
+              LET&apos;S TALK
               <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
             </a>
             <a
-              href="#contact"
+              href="#work"
               className="group inline-flex items-center gap-2 border-2 border-fg px-5 py-3 font-mono text-xs tracking-widest text-fg transition-colors hover:bg-fg hover:text-bg"
             >
-              ESTABLISH TRANSMISSION
+              SEE THE WORK
             </a>
           </div>
 

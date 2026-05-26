@@ -139,13 +139,16 @@ function GipsyDanger({
         if ("transmissionMap" in mat) mat.transmissionMap = null;
         if ("thickness" in mat) mat.thickness = 0;
 
-        // floor near-black & ceiling near-white so panels don't disappear
-        // against either theme's bg
+        // floor near-black & route bright-white parts to accent so chest
+        // reactor (and any pale panel) stay visible on light bg
         if ("color" in mat && mat.color) {
           const c = mat.color;
           const sum = c.r + c.g + c.b;
           if (sum < 0.15) c.setRGB(0.15, 0.18, 0.25);
-          else if (sum > 2.7) c.setRGB(0.4, 0.45, 0.55);
+          else if (sum > 2.6) {
+            c.copy(ACCENT);
+            mat.map = null;
+          }
         }
 
         if ("roughness" in mat) {
