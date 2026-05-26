@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { Mecha } from "./Mecha";
 import { ShiftingText } from "./ShiftingText";
 
@@ -108,73 +108,40 @@ export function Hero() {
           transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col justify-center gap-5"
         >
-          <div className="flex items-center gap-3 font-mono text-[12px] tracking-widest text-fg-muted">
-            <span className="bg-fg px-2 py-1 text-bg">001</span>
-            <span>ABOUT</span>
+          {/* tag line — Sid's "yea, I'm batman" energy */}
+          <div className="font-mono text-[13px] uppercase tracking-[0.25em] text-accent">
+            yea, i&apos;m a ranger
           </div>
 
-          <div className="flex items-baseline gap-3 font-display text-xl text-fg-muted md:text-2xl">
-            <span className="h-px w-8 self-center bg-fg" aria-hidden />
-            <span>Hi, I&apos;m</span>
-          </div>
-
-          <h1 className="font-display text-[20vw] font-bold leading-[0.85] tracking-tight text-fg md:text-[11.5vw] lg:text-[9.5vw]">
-            tribhuvan
-            <span className="text-accent">.</span>
-          </h1>
-
-          <div className="flex flex-wrap items-baseline gap-3 font-display text-2xl text-fg-muted md:text-3xl">
-            <span>a</span>
-            <ShiftingText
-              words={[
-                "Developer",
-                "Ranger",
-                "K-Sci",
-                "J-Tech",
-                "Drift-Compatible",
-                "Architect",
-              ]}
-              className="font-bold text-accent"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 font-mono text-[12px] tracking-widest">
-            <span className="h-px w-10 bg-fg" />
-            <span className="text-fg-muted">
-              CSE @ MLRIT · TECH MENTOR @ CIE-MLRIT
+          {/* need a [Role]? */}
+          <div className="flex flex-col leading-[0.9]">
+            <span className="font-display text-3xl font-medium text-fg-muted md:text-5xl lg:text-6xl">
+              need a
             </span>
+            <div className="flex items-baseline">
+              <ShiftingText
+                words={["Developer", "Engineer", "Architect", "Builder", "Pilot"]}
+                className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]"
+              />
+              <span className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]">
+                ?
+              </span>
+            </div>
           </div>
 
+          {/* subtitle */}
           <p className="max-w-xl font-display text-lg leading-relaxed text-fg-muted md:text-xl">
-            Building research-flavored systems that ship — from ResNet
-            classifiers to AR furniture pipelines to institutional platforms.
+            I&apos;m <span className="text-fg">Tribhuvan</span> — AI/ML,
+            full-stack & IoT enthusiast. CSE @ MLRIT · Tech Mentor @ CIE-MLRIT.
           </p>
 
-          <div className="mt-3 flex flex-wrap items-center gap-4">
-            <span className="font-display text-lg font-medium text-fg md:text-xl">
-              Need a developer?
-            </span>
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-2 border-2 border-fg bg-fg px-5 py-3 font-mono text-xs tracking-widest text-bg transition-colors hover:bg-accent hover:text-fg"
-            >
-              LET&apos;S TALK
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href="#work"
-              className="group inline-flex items-center gap-2 border-2 border-fg px-5 py-3 font-mono text-xs tracking-widest text-fg transition-colors hover:bg-fg hover:text-bg"
-            >
-              SEE THE WORK
-            </a>
-          </div>
-
+          {/* explore CTA */}
           <a
             href="#work"
-            className="mt-4 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-fg-faint hover:text-fg"
+            className="group mt-2 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.25em] text-accent hover:text-fg"
           >
-            <ArrowDown size={12} className="animate-blip" />
-            SCROLL TO DEPLOY
+            <ArrowDown size={14} className="animate-blip" />
+            explore
           </a>
         </motion.div>
       </div>
