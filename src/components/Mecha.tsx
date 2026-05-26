@@ -65,8 +65,9 @@ function GipsyDanger({
   // overridden to an unlit basic material — guarantees they always glow
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const ACCENT = new THREE.Color("#ff8a00");
-    const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow|spinning_blade|blade/i;
+    const ACCENT = new THREE.Color("#ffb800");
+    const REACTOR_NAMES = /spinning_blade/i;
+    const GLASS_NAMES = /visor|helmet|eye|glass|lens|hud/i;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -82,23 +83,46 @@ function GipsyDanger({
           thickness?: number;
           alphaMap?: THREE.Texture | null;
         };
-        const hasEmissive =
-          !!mat.emissive &&
-          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
-        const hasTransmission =
+        const wasTransparent =
+          mat.transparent === true ||
+          (typeof mat.opacity === "number" && mat.opacity < 0.95) ||
           ("transmission" in mat && (mat.transmission ?? 0) > 0.01) ||
-          ("transmissionMap" in mat && !!mat.transmissionMap);
-        const nameHit =
-          GLOW_NAMES.test(mesh.name || "") || GLOW_NAMES.test(mat.name || "");
-        const isGlow = hasEmissive || hasTransmission || nameHit;
+          ("transmissionMap" in mat && !!mat.transmissionMap) ||
+          !!mat.alphaMap;
+        const isReactor =
+          REACTOR_NAMES.test(mesh.name || "") || REACTOR_NAMES.test(mat.name || "");
+        const isGlass =
+          GLASS_NAMES.test(mesh.name || "") ||
+          GLASS_NAMES.test(mat.name || "") ||
+          wasTransparent;
 
-        // Replace glow parts (reactor, helmet visor, eyes) with an unlit
-        // basic material so they always pop, regardless of theme/lighting.
-        if (isGlow) {
-          // force accent on every glow part — keeps visor/eye/reactor on-brand
-          const glow = ACCENT.clone();
+        // Reactor: tint the existing material gold but keep the pinwheel
+        // texture so detail isn't lost.
+        if (isReactor) {
+          if ("color" in mat && mat.color) mat.color.copy(ACCENT);
+          if ("emissive" in mat && mat.emissive) {
+            mat.emissive.copy(ACCENT);
+            mat.emissiveIntensity = 0.9;
+          }
+          mat.transparent = false;
+          mat.opacity = 1;
+          mat.depthWrite = true;
+          if ("transmission" in mat) mat.transmission = 0;
+          if ("transmissionMap" in mat) mat.transmissionMap = null;
+          if ("roughness" in mat) {
+            mat.roughness = 0.35;
+            mat.metalness = 0.2;
+          }
+          mat.needsUpdate = true;
+          mesh.renderOrder = 1;
+          return;
+        }
+
+        // Glass parts (helmet visor, eyes): force fully opaque + accent so
+        // they pop instead of showing the bg through.
+        if (isGlass) {
           const basic = new THREE.MeshBasicMaterial({
-            color: glow,
+            color: ACCENT.clone(),
             map: null,
             transparent: false,
             opacity: 1,
@@ -123,6 +147,7 @@ function GipsyDanger({
         mat.alphaTest = 0;
         mat.alphaMap = null;
         mat.side = THREE.FrontSide;
+        mat.blending = THREE.NormalBlending;
         if ("transmission" in mat) mat.transmission = 0;
         if ("transmissionMap" in mat) mat.transmissionMap = null;
         if ("thickness" in mat) mat.thickness = 0;
