@@ -117,10 +117,10 @@ export function Trajectory() {
 
   return (
     <Section
-      id="trajectory"
-      index="005"
+      id="work"
+      index="002"
       label="KAIJU LOG"
-      title="defeated"
+      title="kaijus defeated"
       kicker="Battle log — each defeated kaiju a project that shipped. Categories scale with the breach size."
     >
       <div ref={containerRef} className="relative">

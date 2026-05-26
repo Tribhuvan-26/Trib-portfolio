@@ -5,11 +5,10 @@ import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const NAV = [
-  { id: "01", label: "Deployed Units", href: "#work" },
+  { id: "01", label: "Kaijus Defeated", href: "#work" },
   { id: "02", label: "Pilot Dossier", href: "#about" },
   { id: "03", label: "Loadout", href: "#stack" },
-  { id: "04", label: "Kaiju Log", href: "#trajectory" },
-  { id: "05", label: "Transmission", href: "#contact" },
+  { id: "04", label: "Transmission", href: "#contact" },
 ];
 
 export function Nav() {
