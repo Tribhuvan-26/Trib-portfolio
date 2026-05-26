@@ -69,9 +69,7 @@ html, body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@media (pointer: fine) {
-  html, body, * { cursor: none; }
-}
+/* native cursor kept visible; custom Cursor.tsx overlays as decoration */
 
 ::selection {
   background: #ffb800;
