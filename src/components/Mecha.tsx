@@ -67,6 +67,7 @@ function GipsyDanger({
   useEffect(() => {
     const ACCENT = new THREE.Color("#ffb800");
     const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow/i;
+    const dump: { mesh: string; mat: string; type: string; emissive: string; map: boolean }[] = [];
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -85,6 +86,15 @@ function GipsyDanger({
         const hasEmissive =
           !!mat.emissive &&
           (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
+        dump.push({
+          mesh: mesh.name,
+          mat: mat.name,
+          type: mat.type,
+          emissive: mat.emissive
+            ? `${mat.emissive.r.toFixed(2)},${mat.emissive.g.toFixed(2)},${mat.emissive.b.toFixed(2)}`
+            : "-",
+          map: !!mat.map,
+        });
         const hasTransmission =
           ("transmission" in mat && (mat.transmission ?? 0) > 0.01) ||
           ("transmissionMap" in mat && !!mat.transmissionMap);
@@ -139,16 +149,13 @@ function GipsyDanger({
         if ("transmissionMap" in mat) mat.transmissionMap = null;
         if ("thickness" in mat) mat.thickness = 0;
 
-        // floor near-black & route bright-white parts to accent so chest
-        // reactor (and any pale panel) stay visible on light bg
+        // floor near-black & ceiling near-white so panels don't disappear
+        // against either theme's bg
         if ("color" in mat && mat.color) {
           const c = mat.color;
           const sum = c.r + c.g + c.b;
           if (sum < 0.15) c.setRGB(0.15, 0.18, 0.25);
-          else if (sum > 2.6) {
-            c.copy(ACCENT);
-            mat.map = null;
-          }
+          else if (sum > 2.7 && !mat.map) c.setRGB(0.4, 0.45, 0.55);
         }
 
         if ("roughness" in mat) {
@@ -164,6 +171,9 @@ function GipsyDanger({
         mat.needsUpdate = true;
       });
     });
+    // One-time dump: open DevTools console, copy this table, paste back to
+    // refine the GLOW_NAMES regex to target reactor / visor by exact name.
+    console.table(dump);
   }, [scene, theme]);
 
   const mixer = useMemo(() => {
