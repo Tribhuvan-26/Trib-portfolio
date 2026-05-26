@@ -184,14 +184,22 @@ function GipsyDanger({
   );
 
   return (
-    <primitive
-      ref={ref}
-      object={scene}
-      onClick={(e: { stopPropagation: () => void; object: THREE.Object3D }) => {
+    <group
+      onPointerDown={(e: {
+        stopPropagation: () => void;
+        object: THREE.Object3D;
+      }) => {
         e.stopPropagation();
-        console.log("[mecha] clicked:", e.object.name, "parent:", e.object.parent?.name);
+        console.log(
+          "[mecha] clicked:",
+          e.object.name,
+          "parent:",
+          e.object.parent?.name,
+        );
       }}
-    />
+    >
+      <primitive ref={ref} object={scene} />
+    </group>
   );
 }
 
