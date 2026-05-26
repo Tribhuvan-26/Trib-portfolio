@@ -174,6 +174,41 @@ function GipsyDanger({
         mat.needsUpdate = true;
       });
     });
+
+    // Second pass: find the helmet by position (topmost ~22% of the model)
+    // and force its meshes fully opaque with a visible base color so it
+    // doesn't disappear into the panel background.
+    scene.updateMatrixWorld(true);
+    const fullBox = new THREE.Box3().setFromObject(scene);
+    if (isFinite(fullBox.min.y)) {
+      const fullSize = new THREE.Vector3();
+      fullBox.getSize(fullSize);
+      const headLineY = fullBox.max.y - fullSize.y * 0.22;
+      const HEAD_COLOR = new THREE.Color("#2a2d35");
+      scene.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (!mesh.isMesh) return;
+        const mb = new THREE.Box3().setFromObject(mesh);
+        const mc = new THREE.Vector3();
+        mb.getCenter(mc);
+        if (mc.y < headLineY) return;
+        const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        mats.forEach((m) => {
+          const mat = m as THREE.MeshStandardMaterial;
+          mat.transparent = false;
+          mat.opacity = 1;
+          mat.depthWrite = true;
+          mat.alphaTest = 0;
+          mat.alphaMap = null;
+          mat.blending = THREE.NormalBlending;
+          if ("color" in mat && mat.color) {
+            const sum = mat.color.r + mat.color.g + mat.color.b;
+            if (sum < 0.45) mat.color.copy(HEAD_COLOR);
+          }
+          mat.needsUpdate = true;
+        });
+      });
+    }
   }, [scene, theme]);
 
   const mixer = useMemo(() => {
