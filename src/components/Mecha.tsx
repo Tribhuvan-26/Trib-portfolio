@@ -105,20 +105,8 @@ function GipsyDanger({
         // Replace glow parts (reactor, helmet visor, eyes) with an unlit
         // basic material so they always pop, regardless of theme/lighting.
         if (isGlow) {
-          let glow: THREE.Color;
-          if (hasEmissive) {
-            glow = mat.emissive
-              .clone()
-              .multiplyScalar(Math.max(1, mat.emissiveIntensity ?? 1));
-            // if emissive ended up near-black/near-white, fall back to accent
-            const sum = glow.r + glow.g + glow.b;
-            if (sum < 0.2 || sum > 2.7) glow = ACCENT.clone();
-          } else {
-            glow = ACCENT.clone();
-          }
-          glow.r = Math.min(1, Math.max(0, glow.r));
-          glow.g = Math.min(1, Math.max(0, glow.g));
-          glow.b = Math.min(1, Math.max(0, glow.b));
+          // force accent on every glow part — keeps visor/eye/reactor on-brand
+          const glow = ACCENT.clone();
           const basic = new THREE.MeshBasicMaterial({
             color: glow,
             map: null,
