@@ -183,7 +183,16 @@ function GipsyDanger({
     [mixer],
   );
 
-  return <primitive ref={ref} object={scene} />;
+  return (
+    <primitive
+      ref={ref}
+      object={scene}
+      onClick={(e: { stopPropagation: () => void; object: THREE.Object3D }) => {
+        e.stopPropagation();
+        console.log("[mecha] clicked:", e.object.name, "parent:", e.object.parent?.name);
+      }}
+    />
+  );
 }
 
 function SceneLights({ theme }: { theme: Theme }) {
