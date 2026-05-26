@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { ArrowUpRight, Lock } from "lucide-react";
 import { trajectory, type KaijuEntry } from "@/config/trajectory";
 import { Section } from "./Section";
 
@@ -92,6 +93,26 @@ function KaijuRow({ entry, index, total }: { entry: KaijuEntry; index: number; t
         <p className="mt-3 max-w-2xl font-display text-sm leading-relaxed text-fg-muted md:text-base">
           {entry.summary}
         </p>
+        {entry.repo && (
+          <div className="mt-4">
+            {entry.repo === "PRIVATE" ? (
+              <span className="inline-flex items-center gap-1.5 border border-line bg-bg-elev px-2.5 py-1 font-mono text-[10px] tracking-widest text-fg-faint">
+                <Lock size={11} />
+                REPO / PRIVATE
+              </span>
+            ) : (
+              <a
+                href={entry.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 border border-line bg-bg-elev px-2.5 py-1 font-mono text-[10px] tracking-widest text-fg-muted hover:border-fg hover:text-fg"
+              >
+                REPO / GITHUB
+                <ArrowUpRight size={11} />
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
       {/* end-cap */}
@@ -120,7 +141,7 @@ export function Trajectory() {
       id="work"
       index="002"
       label="KAIJU LOG"
-      title="kaijus defeated"
+      title="kaijus timeline"
       kicker="Battle log — each defeated kaiju a project that shipped. Categories scale with the breach size."
     >
       <div ref={containerRef} className="relative">

@@ -13,6 +13,8 @@ export interface KaijuEntry {
   summary: string;
   /** outcome */
   status: "DEFEATED" | "IN PURSUIT" | "ARCHIVED";
+  /** GitHub repo URL, or "PRIVATE" if not public */
+  repo?: string;
 }
 
 export const trajectory: KaijuEntry[] = [
@@ -25,6 +27,7 @@ export const trajectory: KaijuEntry[] = [
     summary:
       "Full-stack breach across attendance, grades, and HOD admin workflows. 117+ commits, role-based defenses for students, faculty, and HODs. Live deployment serving 30+ active operators.",
     status: "IN PURSUIT",
+    repo: "PRIVATE",
   },
   {
     codename: "MELANOSAUR",
@@ -35,6 +38,7 @@ export const trajectory: KaijuEntry[] = [
     summary:
       "ResNet50 transfer-learning classifier on HAM10000. Pinned the kaiju at ~85% validation accuracy / 0.93 macro AUC across 7 lesion classes. Grad-CAM explainability armed and operational.",
     status: "DEFEATED",
+    repo: "https://github.com/Tribhuvan-26/DermAI-SkinCancerDetection",
   },
   {
     codename: "FURBISH",
@@ -45,15 +49,5 @@ export const trajectory: KaijuEntry[] = [
     summary:
       "Unity AR strike — 3D furniture placement, scaling, and layout preview piped through a mobile camera. Lightweight engagement, clean takedown.",
     status: "DEFEATED",
-  },
-  {
-    codename: "CIE-MENTOR",
-    date: "2025 Aug — Present",
-    category: 3,
-    jaeger: "CIE-MLRIT Upskilling Program",
-    location: "Sector / Dundigal Shatterdome",
-    summary:
-      "Scaled a technical upskilling program for 30+ student pilots across IoT, vibe coding, CAD, and additive manufacturing — 40% lift in project delivery rate. Cross-functional drift mentoring.",
-    status: "IN PURSUIT",
   },
 ];
