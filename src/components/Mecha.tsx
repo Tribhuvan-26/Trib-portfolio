@@ -66,8 +66,7 @@ function GipsyDanger({
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
     const ACCENT = new THREE.Color("#ffb800");
-    const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow/i;
-    const dump: { mesh: string; mat: string; type: string; emissive: string; map: boolean }[] = [];
+    const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow|spinning_blade|blade/i;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -86,15 +85,6 @@ function GipsyDanger({
         const hasEmissive =
           !!mat.emissive &&
           (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0);
-        dump.push({
-          mesh: mesh.name,
-          mat: mat.name,
-          type: mat.type,
-          emissive: mat.emissive
-            ? `${mat.emissive.r.toFixed(2)},${mat.emissive.g.toFixed(2)},${mat.emissive.b.toFixed(2)}`
-            : "-",
-          map: !!mat.map,
-        });
         const hasTransmission =
           ("transmission" in mat && (mat.transmission ?? 0) > 0.01) ||
           ("transmissionMap" in mat && !!mat.transmissionMap);
@@ -159,16 +149,6 @@ function GipsyDanger({
         mat.needsUpdate = true;
       });
     });
-    // copyable list of every mesh name in the model
-    console.log("[mecha] mesh names:\n" + dump.map((d) => `${d.mesh}  |  ${d.mat}`).join("\n"));
-    // candidates likely to be reactor / visor (no texture map or odd color)
-    console.log(
-      "[mecha] glow candidates:\n" +
-        dump
-          .filter((d) => !d.map || d.emissive !== "0.00,0.00,0.00")
-          .map((d) => `${d.mesh}  |  ${d.mat}  |  emissive=${d.emissive}  |  map=${d.map}`)
-          .join("\n"),
-    );
   }, [scene, theme]);
 
   const mixer = useMemo(() => {
