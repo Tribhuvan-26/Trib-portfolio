@@ -65,7 +65,7 @@ function GipsyDanger({
   // overridden to an unlit basic material — guarantees they always glow
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const ACCENT = new THREE.Color("#ffb800");
+    const ACCENT = new THREE.Color("#ff8a00");
     const GLOW_NAMES = /reactor|core|visor|helmet|eye|glass|lens|hud|light|emit|glow|spinning_blade|blade/i;
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -183,24 +183,7 @@ function GipsyDanger({
     [mixer],
   );
 
-  return (
-    <group
-      onPointerDown={(e: {
-        stopPropagation: () => void;
-        object: THREE.Object3D;
-      }) => {
-        e.stopPropagation();
-        console.log(
-          "[mecha] clicked:",
-          e.object.name,
-          "parent:",
-          e.object.parent?.name,
-        );
-      }}
-    >
-      <primitive ref={ref} object={scene} />
-    </group>
-  );
+  return <primitive ref={ref} object={scene} />;
 }
 
 function SceneLights({ theme }: { theme: Theme }) {

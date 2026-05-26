@@ -25,17 +25,14 @@ export function ShiftingText({ words, interval = 2200, className = "" }: Props) 
   }, [words.length, interval]);
 
   return (
-    <span
-      className={`relative inline-flex align-baseline overflow-hidden ${className}`}
-      style={{ minWidth: "1ch" }}
-    >
+    <span className={`relative inline-block ${className}`} style={{ minWidth: "1ch" }}>
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={`${i}-${words[i]}`}
-          initial={{ y: "100%", skewY: 6, opacity: 0 }}
-          animate={{ y: "0%", skewY: 0, opacity: 1 }}
-          exit={{ y: "-110%", skewY: -6, opacity: 0 }}
-          transition={{ duration: 0.42, ease: [0.65, 0, 0.35, 1] }}
+          initial={{ opacity: 0, y: 10, skewY: 4 }}
+          animate={{ opacity: 1, y: 0, skewY: 0 }}
+          exit={{ opacity: 0, y: -10, skewY: -4 }}
+          transition={{ duration: 0.38, ease: [0.65, 0, 0.35, 1] }}
           className="inline-block"
         >
           {words[i]}
