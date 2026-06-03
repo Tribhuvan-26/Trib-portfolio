@@ -27,7 +27,7 @@ function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
 }
 
 export function Hero() {
-  const [clip, setClip] = useState<string>("emote");
+  const [clip, setClip] = useState<string>("idle");
   return (
     <section
       id="top"
