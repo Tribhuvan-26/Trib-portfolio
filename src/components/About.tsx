@@ -8,7 +8,6 @@ import { Section } from "./Section";
 const VITALS = [
   { label: "LOCATION", value: social.location },
   { label: "DISCIPLINE", value: "AI/ML · Full-Stack · IoT" },
-  { label: "INSTITUTION", value: "B.Tech CSE @ MLRIT" },
   { label: "CURRENT OP", value: "Tech Mentor @ CIE-MLRIT" },
   { label: "DRIFT STATUS", value: "Open to collab" },
 ];
