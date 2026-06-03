@@ -32,13 +32,13 @@ export function About() {
           <p>
             <span className="text-fg">{social.bio}</span>
           </p>
-          <p className="text-fg-faint transition-colors duration-300 hover:text-fg">
+          <p>
             I like work that lives at the seam between research and production:
             ResNet classifiers with Grad-CAM explainability, Next.js + Supabase
             platforms running in prod, AR pipelines in Unity. The good stuff
             usually shows up when those three meet.
           </p>
-          <p className="text-fg-faint transition-colors duration-300 hover:text-fg">
+          <p>
             Day job: mentoring 30+ students at CIE-MLRIT across IoT, vibe-coding,
             CAD, and additive manufacturing — pushed project delivery rate up
             40% and shipped a Python application serving 30+ institutional

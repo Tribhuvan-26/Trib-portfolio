@@ -30,16 +30,9 @@ export function Nav() {
       }`}
     >
       <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-6 md:px-10">
-        <a href="#top" className="flex items-center gap-3">
-          <span
-            aria-hidden
-            className="hazard-stripe-thin block h-5 w-5"
-          />
+        <a href="#top" className="flex items-center">
           <span className="font-display text-sm font-bold tracking-widest text-fg">
-            TRIBHUVAN
-          </span>
-          <span className="hidden font-mono text-[10px] tracking-widest text-fg-faint md:inline">
-            / PILOT 01
+            Tribhuvan&apos;s portfolio
           </span>
         </a>
 
