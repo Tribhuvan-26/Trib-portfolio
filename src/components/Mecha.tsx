@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 const MODEL_URL = "/models/GipsyDanger.glb";
@@ -289,6 +289,15 @@ export function Mecha({
         <Suspense fallback={null}>
           <GipsyDanger theme={theme} clip={clip} />
         </Suspense>
+        <OrbitControls
+          enablePan={false}
+          enableZoom={false}
+          enableDamping
+          dampingFactor={0.08}
+          rotateSpeed={0.8}
+          minPolarAngle={Math.PI * 0.25}
+          maxPolarAngle={Math.PI * 0.75}
+        />
       </Canvas>
     </div>
   );
