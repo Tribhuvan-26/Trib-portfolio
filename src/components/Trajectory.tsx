@@ -76,19 +76,11 @@ function KaijuRow({ entry, index, total }: { entry: KaijuEntry; index: number; t
 
       {/* body */}
       <div className="col-start-2 md:col-start-3">
-        <div className="flex items-baseline gap-3">
-          <h4 className="font-display text-2xl font-bold tracking-tight text-fg md:text-3xl">
-            {entry.codename}
-          </h4>
-          <span className="font-mono text-[10px] tracking-widest text-fg-muted">
-            ◢ KAIJU
-          </span>
-        </div>
+        <h4 className="font-display text-2xl font-bold tracking-tight text-fg md:text-3xl">
+          {entry.name}
+        </h4>
         <div className="mt-1 font-mono text-[11px] tracking-widest text-accent">
           {entry.location.toUpperCase()}
-        </div>
-        <div className="mt-1 font-mono text-[10px] tracking-widest text-fg-muted">
-          JAEGER DEPLOYED / <span className="text-fg">{entry.jaeger.toUpperCase()}</span>
         </div>
         <p className="mt-3 max-w-2xl font-display text-sm leading-relaxed text-fg-muted md:text-base">
           {entry.summary}
@@ -159,7 +151,7 @@ export function Trajectory() {
         <ol className="md:pl-10">
           {trajectory.map((entry, i) => (
             <KaijuRow
-              key={entry.codename}
+              key={entry.name}
               entry={entry}
               index={i}
               total={trajectory.length}
