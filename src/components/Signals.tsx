@@ -48,7 +48,7 @@ export function Signals() {
       id="signals"
       index="006"
       label="NEURAL FEED"
-      title="active contributions"
+      title="github contributions"
       kicker="Drift telemetry from GitHub — public + private. Updates hourly."
     >
       <motion.div
