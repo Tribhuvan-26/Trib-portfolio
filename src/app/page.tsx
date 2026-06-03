@@ -1,7 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
-import { Stack } from "@/components/Stack";
 import { Trajectory } from "@/components/Trajectory";
 import { Signals } from "@/components/Signals";
 import { Contact } from "@/components/Contact";
@@ -19,7 +18,6 @@ export default function Home() {
         <Hero />
         <Trajectory />
         <About />
-        <Stack />
         <Signals />
         <Contact />
       </main>

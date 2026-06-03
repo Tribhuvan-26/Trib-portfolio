@@ -7,8 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 const NAV = [
   { id: "01", label: "Kaijus Timeline", href: "#work" },
   { id: "02", label: "Pilot Dossier", href: "#about" },
-  { id: "03", label: "Loadout", href: "#stack" },
-  { id: "04", label: "Transmission", href: "#contact" },
+  { id: "03", label: "Transmission", href: "#contact" },
 ];
 
 export function Nav() {
