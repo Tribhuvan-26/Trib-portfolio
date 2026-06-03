@@ -118,12 +118,12 @@ export function Hero() {
             <span className="font-display text-3xl font-medium text-fg-muted md:text-5xl lg:text-6xl">
               need a
             </span>
-            <div className="flex items-baseline">
+            <div className="flex items-baseline whitespace-nowrap">
               <ShiftingText
                 words={["Developer", "Builder", "Tech Enthusiast"]}
-                className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]"
+                className="font-display text-[14vw] font-extrabold tracking-tight text-accent whitespace-nowrap md:text-[7.5vw] lg:text-[6vw]"
               />
-              <span className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]">
+              <span className="font-display text-[14vw] font-extrabold tracking-tight text-accent md:text-[7.5vw] lg:text-[6vw]">
                 ?
               </span>
             </div>
