@@ -5,20 +5,13 @@ import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Mecha } from "./Mecha";
 import { ShiftingText } from "./ShiftingText";
+import { HazardTicker } from "./HazardTicker";
 
 const CLIPS: { id: string; label: string }[] = [
   { id: "emote", label: "EMOTE" },
   { id: "idle", label: "IDLE" },
   { id: "walk", label: "WALK" },
   { id: "run", label: "RUN" },
-];
-
-const TICKER = [
-  "SYSTEMS ONLINE",
-  "CONN-POD SYNCED",
-  "NEURAL HANDSHAKE STABLE",
-  "DRIFT COMPATIBLE",
-  "READY FOR DEPLOYMENT",
 ];
 
 function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
@@ -146,25 +139,7 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* bottom ticker */}
-      <div>
-        <div className="h-2 hazard-stripe-thin" aria-hidden />
-        <div className="overflow-hidden bg-fg text-bg">
-          <div className="flex animate-marquee whitespace-nowrap py-3 font-mono text-[11px] tracking-[0.35em]">
-            {[0, 1].map((k) => (
-              <div key={k} className="flex shrink-0 items-center gap-10 pr-10">
-                {TICKER.map((t, i) => (
-                  <span key={`${k}-${i}`} className="flex items-center gap-10">
-                    <span>{t}</span>
-                    <span className="text-accent">◆</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="h-2 hazard-stripe-thin" aria-hidden />
-      </div>
+      <HazardTicker />
     </section>
   );
 }
