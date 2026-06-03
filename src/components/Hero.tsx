@@ -120,7 +120,7 @@ export function Hero() {
             </span>
             <div className="flex items-baseline">
               <ShiftingText
-                words={["Developer", "Engineer", "Architect", "Builder", "Pilot"]}
+                words={["Developer", "Builder", "Tech Enthusiast"]}
                 className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]"
               />
               <span className="font-display text-[18vw] font-extrabold tracking-tight text-accent md:text-[10vw] lg:text-[8.5vw]">
