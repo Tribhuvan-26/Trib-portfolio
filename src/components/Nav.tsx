@@ -31,8 +31,8 @@ export function Nav() {
     >
       <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-6 md:px-10">
         <a href="#top" className="flex items-center">
-          <span className="font-display text-sm font-bold tracking-widest text-fg">
-            Tribhuvan&apos;s portfolio
+          <span className="font-display text-base font-semibold tracking-tight text-fg md:text-lg">
+            <span className="text-accent">Tribhuvan&apos;s</span> portfolio
           </span>
         </a>
 
