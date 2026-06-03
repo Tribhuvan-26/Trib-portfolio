@@ -74,7 +74,7 @@ export function Signals() {
           </span>
         </div>
 
-        <div className="relative border border-line bg-bg-elev p-6 md:p-10">
+        <div className="relative w-fit max-w-full border border-line bg-bg-elev p-6 md:p-10">
           <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
             // DRIFT TELEMETRY
           </span>
