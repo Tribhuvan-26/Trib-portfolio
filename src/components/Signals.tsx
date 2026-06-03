@@ -32,7 +32,7 @@ export function Signals() {
       id="signals"
       index="006"
       label="NEURAL FEED"
-      title="live"
+      title="active contributions"
       kicker="Drift telemetry from the public GitHub. Updates daily."
     >
       <motion.div
