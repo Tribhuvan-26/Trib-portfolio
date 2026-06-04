@@ -81,6 +81,10 @@ function GipsyDanger({
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
     const ACCENT = new THREE.Color("#8a5a00");
+    // Visor reads as a flat unlit color (no scene light hits it), so it needs a
+    // brighter gold than ACCENT or it goes muddy. Decoupled on purpose: dimming
+    // ACCENT must not drag the visor into the dark.
+    const VISOR = new THREE.Color("#e0a420");
     const REACTOR_NAMES = /spinning_blade/i;
     const GLASS_NAMES = /visor|helmet|eye|glass|lens|hud/i;
     scene.traverse((o) => {
@@ -137,7 +141,7 @@ function GipsyDanger({
         // they pop instead of showing the bg through.
         if (isGlass) {
           const basic = new THREE.MeshBasicMaterial({
-            color: ACCENT.clone(),
+            color: VISOR.clone(),
             map: null,
             transparent: false,
             opacity: 1,
