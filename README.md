@@ -1,76 +1,158 @@
-# Trib Portfolio — Pacific Rim Mecha Edition
+# Trib Portfolio — Pacific Rim / Jaeger Edition
 
-Interactive personal portfolio for **Tribhuvan** (AI/ML Engineer & Full-Stack Dev). Cockpit-themed Next.js 16 + R3F site.
+Personal portfolio site for **Tribhuvan** (AI/ML Engineer & Full-Stack Developer).
+Single-page, cockpit/"Shatterdome"-themed Next.js app with an interactive 3D
+Jaeger (Gipsy Danger), light/dark theming, smooth scroll, and a live GitHub
+contribution feed.
 
-![status](https://img.shields.io/badge/STATUS-ONLINE-00d4ff?style=flat-square)
-![stack](https://img.shields.io/badge/STACK-Next.js%2016%20·%20R3F%20·%20GSAP%20·%20Tailwind%204-39ff14?style=flat-square)
+> This README is the project map — read it first to understand what lives where.
+
+---
 
 ## Stack
 
 | Layer | Tech |
 |---|---|
-| Framework | Next.js 16 (App Router) + TypeScript |
-| Styling | Tailwind 4 + CSS-first theme |
-| 3D | Three.js + `@react-three/fiber` + `@react-three/drei` |
-| Motion | Framer Motion + Lenis smooth scroll + scroll-driven R3F |
-| Icons | lucide-react (+ inline SVG for brands) |
-| Contact | Formspree |
+| Framework | Next.js **16** (App Router) + React **19** + TypeScript |
+| Bundler | Turbopack |
+| Styling | Tailwind **4** (CSS-first `@theme` in `globals.css`), theme switched via `data-theme` attribute |
+| 3D | `three` + `@react-three/fiber` + `@react-three/drei` |
+| Motion | `framer-motion`, `lenis` (smooth scroll), `gsap` |
+| Icons | `lucide-react`, `react-icons` |
+| GitHub feed | `react-activity-calendar` + GitHub GraphQL API (server route) |
+| HTTP | `axios` |
 | Deploy | Vercel |
 
-## Sections
+> ⚠️ **Next.js 16 caveat:** per `AGENTS.md`, this Next version may differ from
+> training-data conventions. Check `node_modules/next/dist/docs/` before writing
+> Next-specific code.
 
-1. **BootScreen** — cockpit boot sequence loading screen
-2. **Hero** — interactive procedural Jaeger (drag-rotate, scroll-driven arm raise, click-to-tooltip body parts). Mobile: SVG silhouette fallback.
-3. **PowerLevels** — animated skill bars across 5 categories
-4. **DeployedUnits** — project cards w/ tilt + dossier modal + status filters
-5. **KaijuTimeline** — engagement log w/ threat-level bars + XP
-6. **NeuralFeeds** — GitHub stats, Spotify, Pinterest (hardcoded fallbacks)
-7. **ContactForm** — Formspree-ready transmission form
-8. **Footer** — social links + Sketchfab attribution
+---
 
-## Develop
+## Run
 
 ```bash
 npm install
-npm run dev          # localhost:3000
-npm run build        # production bundle
+npm run dev      # http://localhost:3000 (Turbopack)
+npm run build    # production build
+npm run start    # serve production build
+npm run lint     # eslint
 ```
 
-## Configure
+### Environment (`.env.local`, gitignored)
 
-Create `.env.local` (gitignored):
+| Var | Required | Purpose |
+|---|---|---|
+| `GITHUB_TOKEN` | for the contribution graph | GitHub PAT (read-only) used by `/api/contributions` to query the GraphQL contributions calendar. Without it the Signals section shows a feed error. |
+| `NEXT_PUBLIC_SITE_URL` | optional | Canonical site URL for metadata / OG / sitemap / robots. Defaults to the Vercel URL. |
 
-```env
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
-NEXT_PUBLIC_FORMSPREE_ID=xxxxxxxx
+There is **no contact-form backend** — the Contact section is social links + a `mailto:`.
+
+---
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx              # root layout: metadata, fonts, JSON-LD,
+│   │                           #   pre-paint theme script (localStorage / prefers-color-scheme)
+│   ├── page.tsx                # page composition (section order lives here)
+│   ├── globals.css             # Tailwind 4 @theme tokens + light/dark CSS vars
+│   ├── opengraph-image.tsx     # generated OG image
+│   ├── robots.ts / sitemap.ts  # SEO routes
+│   └── api/contributions/route.ts   # GitHub GraphQL → {total, data[]}, revalidate 1h
+│
+├── components/                 # all UI (see table below)
+│
+└── config/                     # editable data (no DB)
+    ├── social.ts               # name, role, bio, email, social handles
+    ├── projects.ts             # project cards (Project[])
+    └── trajectory.ts           # "Kaiju" engagement log (KaijuEntry[], category I–V)
+
+public/models/                  # 3D assets (see "3D model" below)
+scripts/fbx_to_glb.py           # headless Blender FBX→GLB converter
 ```
 
-Edit `src/config/` to swap placeholder data:
+### Components
 
-- `social.ts` — name, email, social handles
-- `skills.ts` — skill categories and proficiency
-- `projects.ts` — your real projects
-- `timeline.ts` — career engagements
+| Component | Role |
+|---|---|
+| `Nav` | top nav / title bar + `ThemeToggle` |
+| `Hero` | landing: tagline + rotating role headline (`ShiftingText`) + the 3D `Mecha` |
+| `Mecha` | R3F canvas rendering **Gipsy Danger** GLB — auto-rotate, drag-orbit, cursor-follow tilt, boot overlay. Runtime material overrides force the reactor + **visor** to glow gold (see note). |
+| `Trajectory` | "Kaiju timeline" — engagement log from `config/trajectory.ts` |
+| `About` | channel-switcher bio (multiple "transmissions") |
+| `Signals` | GitHub contribution calendar (theme-aware palette) from `/api/contributions` |
+| `Contact` | social links + email (`mailto:`) |
+| `Footer` | links + attribution |
+| `HazardTicker` | scrolling hazard-stripe marquee strips between sections |
+| `Section` | shared numbered section-header wrapper |
+| `ShiftingText` / `DecryptedText` | animated text effects |
+| `TechIcon` | brand/tech icon lookup (`hasIcon` guard) |
+| `Cursor` | custom gold cursor |
+| `SmoothScroll` | Lenis smooth-scroll provider |
+| `Logo` | custom angular "winged V" mark |
+| `ThemeToggle` | toggles `data-theme` + persists to localStorage |
 
-## Real Jaeger model (Phase 2)
+Page order (`page.tsx`): `SmoothScroll` · `Cursor` · `Nav` · **Hero → Trajectory → ticker → About → ticker → Signals → ticker → Contact** · `Footer`.
 
-The Hero uses a procedural box-mecha for now. To swap in the Sketchfab Gipsy Danger:
+---
 
-1. Download from [Sketchfab — Gipsy Danger Animated](https://sketchfab.com/3d-models/gipsy-danger-animated-10341a9567c84f448e5b87ecefc7ad8b) (Free Standard, attribute author ReyhanGTZ).
-2. Place glTF in `public/models/jaeger.glb`.
-3. Optionally compress with Draco: `npx gltf-pipeline -i jaeger.glb -o jaeger.glb -d`.
-4. Replace `ProceduralJaeger` w/ a `useGLTF` + `useAnimations` component in `src/components/jaeger/`.
+## Theming
 
-## Deploy
+- Two themes: **dark** (default, "Shatterdome") and **light** ("concrete hangar"),
+  driven by `data-theme` on `<html>`.
+- A pre-paint inline script in `layout.tsx` sets the theme before first paint
+  (localStorage → `prefers-color-scheme`) to avoid flash.
+- All colors are CSS variables defined per-theme in `globals.css` and exposed to
+  Tailwind via `@theme inline` (`bg-bg`, `text-fg`, `text-accent`, `border-line`, …).
+- **Rule of thumb:** use the theme tokens, not raw hex, so both modes stay correct.
+  Intentionally hard-coded exceptions: the 3D scene lights/materials in `Mecha.tsx`,
+  the custom cursor glow, and the `Signals` calendar palette (its own light/dark arrays).
 
-```bash
-# Push to GitHub, then Vercel auto-detects Next.js.
-# Set env vars in Vercel dashboard:
-#   NEXT_PUBLIC_SITE_URL
-#   NEXT_PUBLIC_FORMSPREE_ID
-```
+---
+
+## 3D model (Gipsy Danger)
+
+`public/models/`:
+
+| File | Purpose |
+|---|---|
+| `GipsyDanger.glb` | **the asset the site loads** (`Mecha.tsx`) — rigged, animated, embedded textures |
+| `GipsyDanger.blend` | Blender source (edit colors/materials here) |
+| `GipsyDanger.fbx` | original FBX source |
+| `UV Color Palette.png` | texture palette |
+
+Pipeline: edit `.blend` in Blender → export GLB to `public/models/GipsyDanger.glb`
+→ commit. `scripts/fbx_to_glb.py` regenerates the GLB from the FBX headlessly
+(`blender --background --python scripts/fbx_to_glb.py`).
+
+**Important — visor/reactor color is set in code, not the model.** `Mecha.tsx`
+traverses the scene at load and overrides materials: the reactor ("spinning blade")
+and the **visor** are forced gold so they read against any background/theme. The
+visor uses a dedicated `VISOR` color (decoupled from the general `ACCENT`) so
+changing the accent doesn't dull it. Recoloring the visor in Blender alone will
+**not** change it on the site — update `Mecha.tsx`.
+
+---
+
+## Editing content
+
+Swap real data in `src/config/` — no database:
+
+- `social.ts` — identity, bio, social/email links
+- `projects.ts` — project cards (`Project[]`)
+- `trajectory.ts` — engagement timeline (`KaijuEntry[]`, Pacific Rim category 1–5)
+
+---
+
+## Conventions
+
+- `AGENTS.md` / `CLAUDE.md` hold agent instructions (checked in). `CLAUDE.md`
+  just imports `AGENTS.md`.
+- Commit style: short scoped prefix, e.g. `mecha: …`, `signals: …`, `hero: …`.
 
 ## Credits
 
-- Jaeger silhouette inspiration: Sketchfab models by ReyhanGTZ and oiopu (CC-BY).
-- Aesthetic: Pacific Rim (Legendary Pictures, 2013).
+Gipsy Danger / Jaeger aesthetic inspired by *Pacific Rim* (Legendary Pictures, 2013).
