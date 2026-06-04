@@ -137,7 +137,7 @@ function GipsyDanger({
         // they pop instead of showing the bg through.
         if (isGlass) {
           const basic = new THREE.MeshBasicMaterial({
-            color: new THREE.Color("#ffb800"),
+            color: ACCENT.clone(),
             map: null,
             transparent: false,
             opacity: 1,
@@ -198,8 +198,8 @@ function GipsyDanger({
     if (isFinite(fullBox.min.y)) {
       const fullSize = new THREE.Vector3();
       fullBox.getSize(fullSize);
-      const headLineY = fullBox.max.y - fullSize.y * 0.18;
-      const HEAD_COLOR = new THREE.Color("#ffb800");
+      const headLineY = fullBox.max.y - fullSize.y * 0.22;
+      const HEAD_COLOR = new THREE.Color("#2a2d35");
       scene.traverse((o) => {
         const mesh = o as THREE.Mesh;
         if (!mesh.isMesh) return;
@@ -216,14 +216,9 @@ function GipsyDanger({
           mat.alphaTest = 0;
           mat.alphaMap = null;
           mat.blending = THREE.NormalBlending;
-          if ("color" in mat && mat.color) mat.color.copy(HEAD_COLOR);
-          if ("emissive" in mat && mat.emissive) {
-            mat.emissive.copy(HEAD_COLOR);
-            mat.emissiveIntensity = 0.25;
-          }
-          if ("roughness" in mat) {
-            (mat as THREE.MeshStandardMaterial).roughness = 0.4;
-            (mat as THREE.MeshStandardMaterial).metalness = 0.5;
+          if ("color" in mat && mat.color) {
+            const sum = mat.color.r + mat.color.g + mat.color.b;
+            if (sum < 0.45) mat.color.copy(HEAD_COLOR);
           }
           mat.needsUpdate = true;
         });
