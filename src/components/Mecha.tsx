@@ -80,7 +80,7 @@ function GipsyDanger({
   // overridden to an unlit basic material — guarantees they always glow
   // regardless of theme / scene lighting / depth issues.
   useEffect(() => {
-    const ACCENT = new THREE.Color("#a86b00");
+    const ACCENT = new THREE.Color("#8a5a00");
     const REACTOR_NAMES = /spinning_blade/i;
     const GLASS_NAMES = /visor|helmet|eye|glass|lens|hud/i;
     scene.traverse((o) => {
