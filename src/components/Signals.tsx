@@ -21,12 +21,34 @@ const ActivityCalendar = dynamic(
   },
 );
 
-const GITHUB_DARK_THEME = {
-  light: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+// react-activity-calendar picks the `light` or `dark` array via colorScheme.
+// Light mode = GitHub's light palette (pale-grey empty cell) so squares don't
+// sit as harsh black blocks on the white card. Dark mode keeps the dark palette.
+const CALENDAR_THEME = {
+  light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
   dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
 };
 
+function useDocTheme(): "light" | "dark" {
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  useEffect(() => {
+    const read = () =>
+      (document.documentElement.getAttribute("data-theme") as
+        | "light"
+        | "dark") || "dark";
+    setTheme(read());
+    const obs = new MutationObserver(() => setTheme(read()));
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => obs.disconnect();
+  }, []);
+  return theme;
+}
+
 export function Signals() {
+  const theme = useDocTheme();
   const [payload, setPayload] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -87,8 +109,8 @@ export function Signals() {
             {!err && payload && (
               <ActivityCalendar
                 data={payload.data}
-                colorScheme="dark"
-                theme={GITHUB_DARK_THEME}
+                colorScheme={theme}
+                theme={CALENDAR_THEME}
                 fontSize={12}
                 blockSize={12}
                 blockMargin={4}
