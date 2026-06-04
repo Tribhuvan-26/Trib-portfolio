@@ -2,13 +2,15 @@
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, OrbitControls } from "@react-three/drei";
+import { useGLTF, OrbitControls, useProgress } from "@react-three/drei";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 
 const MODEL_URL = "/models/GipsyDanger.glb";
 const TARGET_HEIGHT = 1.7;
 
 type Theme = "light" | "dark";
+type Pointer = { x: number; y: number };
 
 function useDocTheme(): Theme {
   const [theme, setTheme] = useState<Theme>("dark");
@@ -29,12 +31,25 @@ function useDocTheme(): Theme {
 function GipsyDanger({
   theme,
   clip: requested,
+  pointer,
+  reduced,
+  onReady,
 }: {
   theme: Theme;
   clip: string;
+  pointer: React.RefObject<Pointer>;
+  reduced: boolean;
+  onReady: () => void;
 }) {
   const { scene, animations } = useGLTF(MODEL_URL);
   const ref = useRef<THREE.Group>(null);
+  const tilt = useRef<THREE.Group>(null);
+
+  // model is resolved (Suspense cleared) by the time this effect runs —
+  // signal the boot overlay it can clear.
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
 
   // auto-fit
   useLayoutEffect(() => {
@@ -235,6 +250,18 @@ function GipsyDanger({
 
   useFrame((_, dt) => {
     mixer.update(dt);
+
+    // cursor-follow: ease the tilt group toward the pointer so the jaeger
+    // subtly "watches" the visitor. Recenters when the pointer leaves.
+    const t = tilt.current;
+    if (t && !reduced) {
+      const p = pointer.current ?? { x: 0, y: 0 };
+      const targetY = p.x * 0.35;
+      const targetX = p.y * 0.12;
+      const k = Math.min(1, dt * 3);
+      t.rotation.y += (targetY - t.rotation.y) * k;
+      t.rotation.x += (targetX - t.rotation.x) * k;
+    }
   });
   useEffect(
     () => () => {
@@ -243,7 +270,11 @@ function GipsyDanger({
     [mixer],
   );
 
-  return <primitive ref={ref} object={scene} />;
+  return (
+    <group ref={tilt}>
+      <primitive ref={ref} object={scene} />
+    </group>
+  );
 }
 
 function SceneLights({ theme }: { theme: Theme }) {
@@ -269,6 +300,64 @@ function SceneLights({ theme }: { theme: Theme }) {
   );
 }
 
+// Jaeger-themed boot screen shown over the canvas until the GLB resolves.
+function BootOverlay({ ready }: { ready: boolean }) {
+  const { progress } = useProgress();
+  const pct = ready ? 100 : Math.min(99, Math.round(progress));
+  return (
+    <AnimatePresence>
+      {!ready && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="pointer-events-auto absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 overflow-hidden bg-bg/80 backdrop-blur-sm"
+        >
+          {/* sweeping scanline */}
+          <span
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px bg-accent shadow-[0_0_12px_var(--accent-glow)] animate-scan"
+          />
+          <span className="font-mono text-[10px] tracking-[0.3em] text-fg-muted animate-pulse-accent">
+            SYNCING NEURAL HANDSHAKE
+          </span>
+          {/* progress bar */}
+          <div className="h-1 w-40 overflow-hidden border border-line bg-bg-elev/60">
+            <div
+              className="h-full bg-accent transition-[width] duration-200 ease-out"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <span className="font-mono text-[10px] tracking-widest text-accent">
+            {pct}% DRIFT COMPATIBLE
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// "drag to rotate" affordance — fades out the first time the user grabs.
+function DragHint({ show }: { show: boolean }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="pointer-events-none absolute bottom-28 left-1/2 z-10 -translate-x-1/2"
+        >
+          <span className="flex items-center gap-1.5 border border-line bg-bg-elev/70 px-2.5 py-1 font-mono text-[10px] tracking-widest text-fg-muted backdrop-blur animate-pulse-accent">
+            <span aria-hidden>⇄</span> DRAG TO ROTATE
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function Mecha({
   className = "",
   clip = "emote",
@@ -277,8 +366,44 @@ export function Mecha({
   clip?: string;
 }) {
   const theme = useDocTheme();
+  const reduced = useReducedMotion() ?? false;
+
+  const pointer = useRef<Pointer>({ x: 0, y: 0 });
+  const [ready, setReady] = useState(false);
+  const [interacted, setInteracted] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+  }, []);
+
+  const handleStart = () => {
+    setInteracted(true);
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    setAutoRotate(false);
+  };
+  const handleEnd = () => {
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => setAutoRotate(true), 2500);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    pointer.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.current.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+  };
+  const onPointerLeave = () => {
+    pointer.current.x = 0;
+    pointer.current.y = 0;
+  };
+
   return (
-    <div className={className}>
+    <div
+      className={className}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+    >
       <Canvas
         dpr={[1, 2]}
         camera={{ position: [0, 0.3, 3], fov: 38 }}
@@ -287,7 +412,13 @@ export function Mecha({
       >
         <SceneLights theme={theme} />
         <Suspense fallback={null}>
-          <GipsyDanger theme={theme} clip={clip} />
+          <GipsyDanger
+            theme={theme}
+            clip={clip}
+            pointer={pointer}
+            reduced={reduced}
+            onReady={() => setReady(true)}
+          />
         </Suspense>
         <OrbitControls
           enablePan={false}
@@ -295,10 +426,17 @@ export function Mecha({
           enableDamping
           dampingFactor={0.08}
           rotateSpeed={0.8}
+          autoRotate={autoRotate && !reduced}
+          autoRotateSpeed={0.6}
+          onStart={handleStart}
+          onEnd={handleEnd}
           minPolarAngle={Math.PI * 0.25}
           maxPolarAngle={Math.PI * 0.75}
         />
       </Canvas>
+
+      <BootOverlay ready={ready} />
+      <DragHint show={ready && !interacted && !reduced} />
     </div>
   );
 }
