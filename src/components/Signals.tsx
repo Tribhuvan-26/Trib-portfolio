@@ -26,7 +26,10 @@ const ActivityCalendar = dynamic(
 // sit as harsh black blocks on the white card. Dark mode keeps the dark palette.
 const CALENDAR_THEME = {
   light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-  dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+  // empty cell is a neutral grey (not near-black) and level-1 is a clearly
+  // brighter green, so "no contribution" vs "a little" is readable without
+  // zooming. Ramps up from there.
+  dark: ["#2a2f37", "#1c7a3e", "#2ea043", "#39d353", "#57e070"],
 };
 
 function useDocTheme(): "light" | "dark" {
