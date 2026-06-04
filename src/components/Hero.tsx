@@ -102,7 +102,7 @@ export function Hero() {
           className="flex flex-col justify-center gap-5"
         >
           {/* tag line — Sid's "yea, I'm batman" energy */}
-          <div className="font-mono text-[13px] uppercase tracking-[0.25em] text-accent">
+          <div className="font-mono text-base uppercase tracking-[0.25em] text-accent md:text-lg lg:text-xl">
             yea, i&apos;m a ranger
           </div>
 
