@@ -7,7 +7,7 @@ import { Section } from "./Section";
 
 const VITALS = [
   { label: "LOCATION", value: social.location },
-  { label: "DISCIPLINE", value: "AI/ML · Full-Stack · IoT" },
+  { label: "EXPERTISE", value: "AI/ML · Full-Stack · IoT" },
   { label: "CURRENT OP", value: "Tech Mentor @ CIE-MLRIT" },
   { label: "DRIFT STATUS", value: "Open to collab" },
 ];
