@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const grotesk = Space_Grotesk({
@@ -77,17 +78,21 @@ export default function RootLayout({
       className={`${grotesk.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body
-        suppressHydrationWarning
-        className="min-h-dvh bg-bg text-fg font-sans"
-      >
-        {/* apply theme before paint to avoid flash */}
-        <script
+      <head>
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
           }}
         />
-        <script
+      </head>
+      <body
+        suppressHydrationWarning
+        className="min-h-dvh bg-bg text-fg font-sans"
+      >
+        <Script
+          id="json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
