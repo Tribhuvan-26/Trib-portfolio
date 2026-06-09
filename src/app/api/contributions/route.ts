@@ -1,5 +1,6 @@
 import { social } from "@/config/social";
 
+export const runtime = 'nodejs';
 export const revalidate = 3600;
 
 const QUERY = `
