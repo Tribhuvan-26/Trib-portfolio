@@ -56,7 +56,7 @@ export function Cursor() {
       <div
         ref={ring}
         aria-hidden
-        className={`pointer-events-none fixed left-0 top-0 z-[90] rounded-full transition-[width,height,border-color] duration-200 ease-out ${
+        className={`pointer-events-none fixed left-0 top-0 z-[90] transition-[width,height,border-color] duration-200 ease-out ${
           hovering
             ? "h-10 w-10 border-2 border-accent"
             : "h-6 w-6 border border-accent"
