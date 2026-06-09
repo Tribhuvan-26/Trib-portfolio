@@ -62,6 +62,8 @@ export function Signals() {
       { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
       { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", author: "Martin Fowler" },
       { text: "Programs must be written for people to read, and only incidentally for machines to execute.", author: "Harold Abelson" },
+      { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
+      { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs" },
     ];
     return quotes[Math.floor(Math.random() * quotes.length)];
   });
