@@ -54,6 +54,17 @@ export function Signals() {
   const theme = useDocTheme();
   const [payload, setPayload] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [quote] = useState(() => {
+    const quotes = [
+      { text: "Code is poetry written in logic.", author: "Unknown" },
+      { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
+      { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
+      { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+      { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", author: "Martin Fowler" },
+      { text: "Programs must be written for people to read, and only incidentally for machines to execute.", author: "Harold Abelson" },
+    ];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  });
 
   useEffect(() => {
     let cancelled = false;
