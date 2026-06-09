@@ -94,7 +94,7 @@ export function Signals() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col gap-6"
       >
-        <div className="grid gap-6 md:grid-cols-[1fr_auto]">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto]">
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <a
