@@ -68,8 +68,8 @@ export function Cursor() {
       <div
         ref={dot}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[91] h-1.5 w-1.5 rounded-full bg-accent"
-        style={{ boxShadow: "0 0 6px rgba(255,184,0,0.7)" }}
+        className="pointer-events-none fixed left-0 top-0 z-[91] h-1.5 w-1.5 bg-accent"
+        style={{ boxShadow: "0 0 8px rgba(255,184,0,0.8)" }}
       />
     </>
   );
