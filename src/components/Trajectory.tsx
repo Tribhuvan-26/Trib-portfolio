@@ -23,7 +23,7 @@ function ThreatBar({ category }: { category: number }) {
           }`}
         />
       ))}
-      <span className="ml-1 font-mono text-[10px] tracking-widest text-fg-muted">
+      <span className="ml-2 font-mono text-[10px] tracking-widest text-fg-muted">
         CAT-{["I", "II", "III", "IV", "V"][category - 1]}
       </span>
     </div>
