@@ -94,50 +94,68 @@ export function Signals() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col gap-6"
       >
-        <div className="flex items-center justify-between">
-          <a
-            href={social.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2 font-mono text-xs tracking-widest text-fg-muted hover:text-fg"
-          >
-            <span className="bg-accent px-1.5 py-0.5 text-bg">@</span>
-            {social.githubHandle}
-            <span className="ml-2 hidden md:inline">↗ OPEN PROFILE</span>
-          </a>
-          <span className="font-mono text-[10px] tracking-widest text-fg-faint">
-            LAST 12 MONTHS
-          </span>
-        </div>
+        <div className="grid gap-6 md:grid-cols-[1fr_auto]">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <a
+                href={social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 font-mono text-xs tracking-widest text-fg-muted hover:text-fg"
+              >
+                <span className="bg-accent px-1.5 py-0.5 text-bg">@</span>
+                {social.githubHandle}
+                <span className="ml-2 hidden md:inline">↗ OPEN PROFILE</span>
+              </a>
+              <span className="font-mono text-[10px] tracking-widest text-fg-faint">
+                LAST 12 MONTHS
+              </span>
+            </div>
 
-        <div className="relative w-fit max-w-full border border-line bg-bg-elev p-6 md:p-10">
-          <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
-            // DRIFT TELEMETRY
-          </span>
-          <div className="github-calendar-wrap overflow-x-auto">
-            {err && (
-              <div className="font-mono text-[10px] tracking-widest text-alert">
-                // FEED ERROR: {err}
+            <div className="relative w-fit max-w-full border border-line bg-bg-elev p-6 md:p-10">
+              <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
+                // DRIFT TELEMETRY
+              </span>
+              <div className="github-calendar-wrap overflow-x-auto">
+                {err && (
+                  <div className="font-mono text-[10px] tracking-widest text-alert">
+                    // FEED ERROR: {err}
+                  </div>
+                )}
+                {!err && payload && (
+                  <ActivityCalendar
+                    data={payload.data}
+                    colorScheme={theme}
+                    theme={CALENDAR_THEME}
+                    fontSize={12}
+                    blockSize={12}
+                    blockMargin={4}
+                    labels={{
+                      totalCount: `${payload.total} contributions in the last year`,
+                    }}
+                  />
+                )}
+                {!err && !payload && (
+                  <div className="font-mono text-[10px] tracking-widest text-fg-faint">
+                    // SYNCING GITHUB FEED…
+                  </div>
+                )}
               </div>
-            )}
-            {!err && payload && (
-              <ActivityCalendar
-                data={payload.data}
-                colorScheme={theme}
-                theme={CALENDAR_THEME}
-                fontSize={12}
-                blockSize={12}
-                blockMargin={4}
-                labels={{
-                  totalCount: `${payload.total} contributions in the last year`,
-                }}
-              />
-            )}
-            {!err && !payload && (
-              <div className="font-mono text-[10px] tracking-widest text-fg-faint">
-                // SYNCING GITHUB FEED…
-              </div>
-            )}
+            </div>
+          </div>
+
+          <div className="relative border border-line bg-bg-elev p-6 md:w-80">
+            <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
+              // DEV WISDOM
+            </span>
+            <blockquote className="flex flex-col gap-4">
+              <p className="font-display text-base leading-relaxed text-fg italic">
+                "{quote.text}"
+              </p>
+              <footer className="font-mono text-[10px] tracking-widest text-accent">
+                — {quote.author}
+              </footer>
+            </blockquote>
           </div>
         </div>
       </motion.div>
