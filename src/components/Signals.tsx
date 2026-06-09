@@ -148,16 +148,16 @@ export function Signals() {
             </div>
           </div>
 
-          <div className="relative border border-line bg-bg-elev p-6 md:w-80 md:p-8">
+          <div className="relative flex flex-col justify-between border border-line bg-bg-elev p-8 md:min-h-[380px] md:w-96">
             <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
               // DEV WISDOM
             </span>
             {quote ? (
-              <blockquote className="flex flex-col gap-4">
-                <p className="font-display text-base leading-relaxed text-fg italic">
+              <blockquote className="flex flex-col gap-6">
+                <p className="font-display text-lg leading-relaxed text-fg italic md:text-xl">
                   "{quote.text}"
                 </p>
-                <footer className="font-mono text-[10px] tracking-widest text-accent">
+                <footer className="font-mono text-[11px] tracking-widest text-accent">
                   — {quote.author}
                 </footer>
               </blockquote>

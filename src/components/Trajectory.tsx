@@ -8,7 +8,7 @@ import { Section } from "./Section";
 
 function ThreatBar({ category }: { category: number }) {
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Cat-${category}`}>
+    <div className="flex items-center gap-2" aria-label={`Cat-${category}`}>
       {[1, 2, 3, 4, 5].map((i) => (
         <span
           key={i}
@@ -23,7 +23,7 @@ function ThreatBar({ category }: { category: number }) {
           }`}
         />
       ))}
-      <span className="ml-2 font-mono text-[10px] tracking-widest text-fg-muted">
+      <span className="font-mono text-[10px] tracking-widest text-fg-muted">
         CAT-{["I", "II", "III", "IV", "V"][category - 1]}
       </span>
     </div>
