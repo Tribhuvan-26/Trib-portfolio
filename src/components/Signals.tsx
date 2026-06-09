@@ -154,10 +154,10 @@ export function Signals() {
             </span>
             {quote ? (
               <blockquote className="flex flex-col gap-6">
-                <p className="font-display text-lg leading-relaxed text-fg italic md:text-xl">
+                <p className="font-display text-xl leading-relaxed text-fg italic md:text-2xl">
                   "{quote.text}"
                 </p>
-                <footer className="font-mono text-[11px] tracking-widest text-accent">
+                <footer className="font-mono text-xs tracking-widest text-accent">
                   — {quote.author}
                 </footer>
               </blockquote>
