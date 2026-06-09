@@ -144,7 +144,7 @@ export function Signals() {
             </div>
           </div>
 
-          <div className="relative border border-line bg-bg-elev p-6 md:w-80">
+          <div className="relative border border-line bg-bg-elev p-6 md:w-80 md:p-8">
             <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
               // DEV WISDOM
             </span>
