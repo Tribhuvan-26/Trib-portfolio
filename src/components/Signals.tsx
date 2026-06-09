@@ -54,7 +54,9 @@ export function Signals() {
   const theme = useDocTheme();
   const [payload, setPayload] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [quote] = useState(() => {
+  const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
+
+  useEffect(() => {
     const quotes = [
       { text: "Code is poetry written in logic.", author: "Unknown" },
       { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
@@ -65,8 +67,8 @@ export function Signals() {
       { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
       { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs" },
     ];
-    return quotes[Math.floor(Math.random() * quotes.length)];
-  });
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -150,14 +152,20 @@ export function Signals() {
             <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
               // DEV WISDOM
             </span>
-            <blockquote className="flex flex-col gap-4">
-              <p className="font-display text-base leading-relaxed text-fg italic">
-                "{quote.text}"
-              </p>
-              <footer className="font-mono text-[10px] tracking-widest text-accent">
-                — {quote.author}
-              </footer>
-            </blockquote>
+            {quote ? (
+              <blockquote className="flex flex-col gap-4">
+                <p className="font-display text-base leading-relaxed text-fg italic">
+                  "{quote.text}"
+                </p>
+                <footer className="font-mono text-[10px] tracking-widest text-accent">
+                  — {quote.author}
+                </footer>
+              </blockquote>
+            ) : (
+              <div className="font-mono text-[10px] tracking-widest text-fg-faint">
+                // LOADING…
+              </div>
+            )}
           </div>
         </div>
       </motion.div>
