@@ -8,8 +8,8 @@ import { ShiftingText } from "./ShiftingText";
 import { HazardTicker } from "./HazardTicker";
 
 const CLIPS: { id: string; label: string }[] = [
-  { id: "emote", label: "EMOTE" },
   { id: "idle", label: "IDLE" },
+  { id: "emote", label: "EMOTE" },
   { id: "walk", label: "WALK" },
   { id: "run", label: "RUN" },
 ];
