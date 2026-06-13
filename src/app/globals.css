@@ -126,6 +126,11 @@ html, body {
 }
 .animate-pulse-accent { animation: pulse-accent 2s ease-in-out infinite; }
 
+@keyframes technet-flow {
+  from { stroke-dashoffset: 24; }
+  to   { stroke-dashoffset: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -2,6 +2,7 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
 import { Trajectory } from "@/components/Trajectory";
+import { TechNet } from "@/components/TechNet";
 import { Signals } from "@/components/Signals";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -33,6 +34,15 @@ export default function Home() {
             "NEURAL LOAD BALANCED",
             "DRIFT COMPATIBLE",
             "CONN-POD SYNCED",
+          ]}
+        />
+        <TechNet />
+        <HazardTicker
+          items={[
+            "WEAPONS ARMED",
+            "NEURAL MATRIX ONLINE",
+            "ALL SYSTEMS NOMINAL",
+            "POWER AT 100%",
           ]}
         />
         <Signals />
