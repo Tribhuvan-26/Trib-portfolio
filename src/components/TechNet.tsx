@@ -16,79 +16,83 @@ const LAYERS: { label: string; nodes: NodeDef[] }[] = [
       { id: "python", label: "Python" },
       { id: "typescript", label: "TypeScript" },
       { id: "javascript", label: "JavaScript" },
-      { id: "c++", label: "C++" },
+      { id: "dart", label: "Dart" },
       { id: "java", label: "Java" },
     ],
   },
   {
     label: "AI / ML",
     nodes: [
-      { id: "pytorch", label: "PyTorch" },
       { id: "tensorflow", label: "TensorFlow" },
-      { id: "keras", label: "Keras" },
+      { id: "pytorch", label: "PyTorch" },
       { id: "scikit-learn", label: "scikit-learn" },
       { id: "opencv", label: "OpenCV" },
-      { id: "huggingface", label: "HuggingFace" },
+      { id: "numpy", label: "NumPy" },
+      { id: "pandas", label: "Pandas" },
     ],
   },
   {
-    label: "FRONTEND",
+    label: "FRONTEND / MOBILE",
     nodes: [
       { id: "react", label: "React" },
       { id: "next.js", label: "Next.js" },
+      { id: "react native", label: "React Native" },
+      { id: "flutter", label: "Flutter" },
       { id: "three.js", label: "Three.js" },
-      { id: "tailwind", label: "Tailwind" },
-      { id: "framer motion", label: "Framer" },
     ],
   },
   {
-    label: "BACKEND",
+    label: "BACKEND / DB",
     nodes: [
       { id: "fastapi", label: "FastAPI" },
       { id: "node.js", label: "Node.js" },
-      { id: "django", label: "Django" },
+      { id: "express.js", label: "Express" },
+      { id: "firebase", label: "Firebase" },
       { id: "supabase", label: "Supabase" },
-      { id: "postgresql", label: "PostgreSQL" },
+      { id: "mongodb", label: "MongoDB" },
     ],
   },
   {
-    label: "DEVOPS / 3D",
+    label: "TOOLS / CREATIVE",
     nodes: [
-      { id: "docker", label: "Docker" },
-      { id: "github actions", label: "GH Actions" },
       { id: "vercel", label: "Vercel" },
-      { id: "unity", label: "Unity" },
+      { id: "figma", label: "Figma" },
       { id: "blender", label: "Blender" },
+      { id: "unity", label: "Unity" },
+      { id: "arduino", label: "Arduino" },
     ],
   },
 ];
 
 const EDGES: [string, string][] = [
   // Languages → AI/ML
-  ["python", "pytorch"], ["python", "tensorflow"], ["python", "keras"],
-  ["python", "scikit-learn"], ["python", "opencv"], ["python", "huggingface"],
-  ["c++", "opencv"],
-  // Languages → Frontend
+  ["python", "tensorflow"], ["python", "pytorch"],
+  ["python", "scikit-learn"], ["python", "opencv"],
+  ["python", "numpy"], ["python", "pandas"],
+  // Languages → Frontend/Mobile
   ["typescript", "react"], ["typescript", "next.js"], ["typescript", "three.js"],
-  ["typescript", "framer motion"],
-  ["javascript", "react"], ["javascript", "next.js"], ["javascript", "three.js"],
+  ["javascript", "react"], ["javascript", "next.js"],
+  ["dart", "flutter"],
+  ["javascript", "react native"],
   // Languages → Backend
-  ["python", "fastapi"], ["python", "django"],
-  ["javascript", "node.js"], ["typescript", "node.js"],
+  ["python", "fastapi"],
+  ["javascript", "node.js"], ["javascript", "express.js"],
+  ["typescript", "node.js"],
   // AI/ML → Backend
-  ["pytorch", "fastapi"], ["tensorflow", "fastapi"],
+  ["tensorflow", "fastapi"], ["pytorch", "fastapi"],
   // Frontend → Backend
-  ["react", "node.js"], ["react", "supabase"], ["react", "fastapi"],
-  ["next.js", "supabase"], ["next.js", "fastapi"], ["next.js", "node.js"],
-  // Frontend → DevOps
-  ["next.js", "vercel"],
-  // Backend → DevOps
-  ["fastapi", "docker"], ["fastapi", "vercel"],
-  ["node.js", "docker"], ["node.js", "github actions"], ["node.js", "vercel"],
-  ["django", "docker"],
+  ["react", "node.js"], ["react", "firebase"], ["react", "supabase"],
+  ["next.js", "supabase"], ["next.js", "fastapi"],
+  ["react native", "firebase"],
+  ["flutter", "firebase"],
+  // Backend → Tools
+  ["fastapi", "vercel"],
+  ["node.js", "vercel"],
   ["supabase", "vercel"],
+  // Frontend → Tools
+  ["next.js", "vercel"],
   // Creative
-  ["typescript", "unity"], ["three.js", "blender"],
+  ["three.js", "blender"], ["typescript", "unity"], ["dart", "arduino"],
 ];
 
 type Pt = { x: number; y: number };
