@@ -2,14 +2,23 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { MapPin, Cpu, GraduationCap, Radio, type LucideIcon } from "lucide-react";
 import { social } from "@/config/social";
 import { Section } from "./Section";
 
-const VITALS = [
-  { label: "LOCATION", value: social.location },
-  { label: "EXPERTISE", value: "AI/ML · Full-Stack · IoT" },
-  { label: "CURRENT OP", value: "Tech Mentor @ CIE-MLRIT" },
-  { label: "DRIFT STATUS", value: "Open to collab" },
+type Vital = {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  readout: string; // little mono telemetry code on the right
+  live?: boolean; // pulses a green "online" indicator (drift status)
+};
+
+const VITALS: Vital[] = [
+  { label: "LOCATION", value: social.location, icon: MapPin, readout: "17.4°N" },
+  { label: "EXPERTISE", value: "AI/ML · Full-Stack · IoT", icon: Cpu, readout: "3-CORE" },
+  { label: "CURRENT OP", value: "Tech Mentor @ CIE-MLRIT", icon: GraduationCap, readout: "ACTIVE" },
+  { label: "DRIFT STATUS", value: "Open to collab", icon: Radio, readout: "OPEN", live: true },
 ];
 
 const CHANNELS = [
@@ -107,23 +116,94 @@ export function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-15% 0px" }}
           transition={{ delay: 0.15, duration: 0.7 }}
-          className="relative border border-line bg-bg-elev p-6"
+          className="relative overflow-hidden border border-line-strong bg-bg-elev"
         >
-          <div className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
-            // PILOT VITALS
+          {/* faint blueprint grid + a soft accent glow bleeding from the top */}
+          <div className="bp-grid pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+          <div
+            className="pointer-events-none absolute -top-16 left-1/2 h-32 w-56 -translate-x-1/2 rounded-full blur-3xl"
+            style={{ background: "var(--accent-glow)", opacity: 0.25 }}
+            aria-hidden
+          />
+          {/* sweeping scanline */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+            <div className="animate-scan absolute inset-x-0 top-0 h-px bg-accent/50" />
           </div>
-          <dl className="grid grid-cols-1 gap-5">
-            {VITALS.map((f) => (
-              <div key={f.label} className="border-l-2 border-accent pl-4">
-                <dt className="font-mono text-[10px] uppercase tracking-widest text-fg-faint">
-                  {f.label}
-                </dt>
-                <dd className="mt-1 font-display text-base font-medium text-fg md:text-lg">
-                  {f.value}
-                </dd>
-              </div>
-            ))}
+          {/* HUD corner brackets */}
+          {[
+            "left-0 top-0 border-l-2 border-t-2",
+            "right-0 top-0 border-r-2 border-t-2",
+            "left-0 bottom-0 border-l-2 border-b-2",
+            "right-0 bottom-0 border-r-2 border-b-2",
+          ].map((pos) => (
+            <span
+              key={pos}
+              className={`pointer-events-none absolute h-3.5 w-3.5 border-accent ${pos}`}
+              aria-hidden
+            />
+          ))}
+
+          {/* header strip */}
+          <div className="relative flex items-center justify-between border-b border-line bg-bg-soft/60 px-4 py-2.5">
+            <span className="flex items-center gap-2 font-mono text-[10px] tracking-widest text-fg-muted">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-blip" aria-hidden />
+              // PILOT VITALS
+            </span>
+            <span className="flex items-center gap-2 font-mono text-[9px] tracking-widest text-fg-faint">
+              <span className="flex items-end gap-[2px]" aria-hidden>
+                <span className="h-1.5 w-[2px] bg-accent" />
+                <span className="h-2 w-[2px] bg-accent" />
+                <span className="h-2.5 w-[2px] bg-accent" />
+                <span className="h-3 w-[2px] bg-accent/40" />
+              </span>
+              SYS OK
+            </span>
+          </div>
+
+          {/* telemetry rows */}
+          <dl className="relative divide-y divide-line">
+            {VITALS.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={f.label}
+                  className="group flex items-center gap-4 px-4 py-4 transition-colors hover:bg-accent/[0.04]"
+                >
+                  <span className="grid h-10 w-10 shrink-0 place-items-center border border-line-strong bg-bg text-accent transition-colors group-hover:border-line-accent">
+                    <Icon size={17} strokeWidth={1.75} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <dt className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-fg-faint">
+                      <span className="text-fg-muted/60">{String(i + 1).padStart(2, "0")}</span>
+                      {f.label}
+                    </dt>
+                    <dd className="mt-0.5 truncate font-display text-base font-medium text-fg md:text-lg">
+                      {f.value}
+                    </dd>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="hidden font-mono text-[9px] tracking-widest text-fg-faint sm:inline">
+                      {f.readout}
+                    </span>
+                    <span
+                      className={`h-2 w-2 rounded-full ${
+                        f.live
+                          ? "bg-[#39d353] shadow-[0_0_8px_#39d353] animate-pulse-accent"
+                          : "bg-fg-faint/50"
+                      }`}
+                      aria-hidden
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </dl>
+
+          {/* footer readout */}
+          <div className="relative flex items-center justify-between border-t border-line bg-bg-soft/60 px-4 py-2 font-mono text-[9px] tracking-widest text-fg-faint">
+            <span>LAT 17.38 · LON 78.48</span>
+            <span className="text-accent">UPLINK 100%</span>
+          </div>
         </motion.div>
       </div>
     </Section>
