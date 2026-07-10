@@ -1,12 +1,14 @@
 import { social } from "@/config/social";
 
 export const runtime = 'nodejs';
-export const revalidate = 3600;
+// Regenerate the cached function at most every 15 min so the calendar tracks
+// fresh commits instead of sitting stale for a full hour.
+export const revalidate = 900;
 
 const QUERY = `
-  query($login: String!) {
+  query($login: String!, $from: DateTime!, $to: DateTime!) {
     user(login: $login) {
-      contributionsCollection {
+      contributionsCollection(from: $from, to: $to) {
         contributionCalendar {
           totalContributions
           weeks {
@@ -36,6 +38,13 @@ export async function GET() {
     return Response.json({ error: "missing_token" }, { status: 500 });
   }
 
+  // Year-to-date: Jan 1 of the current year → now. Computed each request so it
+  // rolls over automatically next year — no hardcoded 2026.
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const from = `${year}-01-01T00:00:00Z`;
+  const to = now.toISOString();
+
   const res = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
@@ -44,9 +53,9 @@ export async function GET() {
     },
     body: JSON.stringify({
       query: QUERY,
-      variables: { login: social.githubHandle },
+      variables: { login: social.githubHandle, from, to },
     }),
-    next: { revalidate: 3600 },
+    next: { revalidate: 900 },
   });
 
   if (!res.ok) {
@@ -71,5 +80,15 @@ export async function GET() {
       })),
   );
 
-  return Response.json({ total: cal.totalContributions, data });
+  return Response.json(
+    { total: cal.totalContributions, data, year },
+    {
+      headers: {
+        // Let the CDN serve a cached copy for 15 min, then hand out the stale
+        // one while it refetches in the background — no stuck-for-an-hour feed,
+        // no hammering the GitHub API on every hit.
+        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
+      },
+    },
+  );
 }
