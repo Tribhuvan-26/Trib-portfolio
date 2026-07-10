@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { social } from "@/config/social";
 import { Section } from "./Section";
+import { NowPlaying } from "./NowPlaying";
 
 type Activity = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
-type Payload = { total: number; data: Activity[] };
+type Payload = { total: number; data: Activity[]; year: number };
 
 const ActivityCalendar = dynamic(
   () => import("react-activity-calendar").then((m) => ({ default: m.ActivityCalendar })),
@@ -54,21 +55,7 @@ export function Signals() {
   const theme = useDocTheme();
   const [payload, setPayload] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [quote, setQuote] = useState<{ text: string; author: string } | null>(null);
-
-  useEffect(() => {
-    const quotes = [
-      { text: "Code is poetry written in logic.", author: "Unknown" },
-      { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
-      { text: "Make it work, make it right, make it fast.", author: "Kent Beck" },
-      { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
-      { text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.", author: "Martin Fowler" },
-      { text: "Programs must be written for people to read, and only incidentally for machines to execute.", author: "Harold Abelson" },
-      { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
-      { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs" },
-    ];
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-  }, []);
+  const calWrap = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,6 +69,17 @@ export function Signals() {
       cancelled = true;
     };
   }, []);
+
+  // When the calendar overflows its card, scroll to the newest month so the
+  // current month (e.g. July) is visible without a manual right-scroll.
+  useEffect(() => {
+    if (!payload) return;
+    const t = setTimeout(() => {
+      const el = calWrap.current;
+      if (el) el.scrollLeft = el.scrollWidth;
+    }, 120);
+    return () => clearTimeout(t);
+  }, [payload, theme]);
 
   return (
     <Section
@@ -112,7 +110,7 @@ export function Signals() {
                 <span className="ml-2 hidden md:inline">↗ OPEN PROFILE</span>
               </a>
               <span className="font-mono text-[10px] tracking-widest text-fg-faint">
-                LAST 12 MONTHS
+                {payload ? `${payload.year} · YTD` : "LOADING"}
               </span>
             </div>
 
@@ -120,7 +118,7 @@ export function Signals() {
               <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
                 // DRIFT TELEMETRY
               </span>
-              <div className="github-calendar-wrap overflow-x-auto">
+              <div ref={calWrap} className="github-calendar-wrap overflow-x-auto">
                 {err && (
                   <div className="font-mono text-[10px] tracking-widest text-alert">
                     // FEED ERROR: {err}
@@ -135,7 +133,7 @@ export function Signals() {
                     blockSize={12}
                     blockMargin={4}
                     labels={{
-                      totalCount: `${payload.total} contributions in the last year`,
+                      totalCount: `${payload.total} contributions in ${payload.year}`,
                     }}
                   />
                 )}
@@ -148,24 +146,8 @@ export function Signals() {
             </div>
           </div>
 
-          <div className="relative flex flex-col justify-between border border-line bg-bg-elev p-8 md:min-h-[380px] md:w-96">
-            <span className="absolute -top-3 left-4 bg-bg-elev px-2 font-mono text-[10px] tracking-widest text-fg-muted">
-              // DEV WISDOM
-            </span>
-            {quote ? (
-              <blockquote className="flex flex-col gap-6">
-                <p className="font-display text-xl leading-relaxed text-fg italic md:text-2xl">
-                  "{quote.text}"
-                </p>
-                <footer className="font-mono text-xs tracking-widest text-accent">
-                  — {quote.author}
-                </footer>
-              </blockquote>
-            ) : (
-              <div className="font-mono text-[10px] tracking-widest text-fg-faint">
-                // LOADING…
-              </div>
-            )}
+          <div className="flex md:w-96">
+            <NowPlaying />
           </div>
         </div>
       </motion.div>
