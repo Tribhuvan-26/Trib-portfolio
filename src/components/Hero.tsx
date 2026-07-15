@@ -125,7 +125,7 @@ export function Hero() {
           {/* subtitle */}
           <p className="max-w-xl font-display text-lg leading-relaxed text-fg-muted md:text-xl">
             I&apos;m <span className="text-fg">Tribhuvan</span> — AI/ML,
-            full-stack & IoT enthusiast. CSE @ MLRIT · Tech Mentor @ CIE-MLRIT.
+            full-stack & IoT enthusiast. CSE @ MLRIT · Technical Lead & Mentor @ CIE-MLRIT.
           </p>
 
           {/* explore CTA */}
