@@ -37,7 +37,7 @@ const CHANNELS = [
     id: "03",
     tag: "DAY JOB",
     body:
-      "Mentoring 100+ students at CIE-MLRIT across IoT, vibe-coding, CAD, and additive manufacturing — pushed project delivery rate up 2x and shipped a Python application serving 30+ institutional users.",
+      "Leading and mentoring 100+ students at CIE-MLRIT across IoT, vibe-coding, CAD, and additive manufacturing — pushed project delivery rate up 2x and shipped a Python application serving 30+ institutional users.",
   },
 ];
 
