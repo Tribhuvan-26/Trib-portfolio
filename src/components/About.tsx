@@ -17,7 +17,7 @@ type Vital = {
 const VITALS: Vital[] = [
   { label: "LOCATION", value: social.location, icon: MapPin, readout: "17.4°N" },
   { label: "EXPERTISE", value: "AI/ML · Full-Stack · IoT", icon: Cpu, readout: "3-CORE" },
-  { label: "CURRENT OP", value: "Technical Lead @ CIE-MLRIT", icon: GraduationCap, readout: "ACTIVE" },
+  { label: "CURRENT OP", value: "Technical Lead & Mentor @ CIE-MLRIT", icon: GraduationCap, readout: "ACTIVE" },
   { label: "DRIFT STATUS", value: "Open to collab", icon: Radio, readout: "OPEN", live: true },
 ];
 
