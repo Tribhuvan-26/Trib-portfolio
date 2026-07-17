@@ -8,11 +8,13 @@ import { Signals } from "@/components/Signals";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Command } from "@/components/Command";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
+      <Command />
       <Nav />
       <main className="relative pt-14">
         <Hero />
