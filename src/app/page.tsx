@@ -9,11 +9,13 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Command } from "@/components/Command";
+import { Spotlight } from "@/components/Spotlight";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
+      <Spotlight />
       <Command />
       <Nav />
       <main className="relative pt-14">
