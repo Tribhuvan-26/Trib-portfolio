@@ -1,146 +1,120 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
-import { Mecha } from "./Mecha";
-import { ShiftingText } from "./ShiftingText";
-import { HazardTicker } from "./HazardTicker";
+import { ArrowRight } from "lucide-react";
+import { social } from "@/config/social";
 
-const CLIPS: { id: string; label: string }[] = [
-  { id: "idle", label: "IDLE" },
-  { id: "emote", label: "EMOTE" },
-  { id: "walk", label: "WALK" },
-  { id: "run", label: "RUN" },
+const reveal = {
+  hidden: { opacity: 0, y: 18 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.08 * i, duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+  }),
+};
+
+const FACTS = [
+  ["Now", "Technical Lead & Mentor @ CIE-MLRIT"],
+  ["Focus", "AI/ML · Full-stack · IoT"],
+  ["Based", social.location],
+  ["Status", "Open to collaborate"],
 ];
 
-function Corner({ pos }: { pos: "tl" | "tr" | "bl" | "br" }) {
-  const map = {
-    tl: "top-0 left-0 border-t-2 border-l-2",
-    tr: "top-0 right-0 border-t-2 border-r-2",
-    bl: "bottom-0 left-0 border-b-2 border-l-2",
-    br: "bottom-0 right-0 border-b-2 border-r-2",
-  };
-  return (
-    <span aria-hidden className={`absolute h-4 w-4 border-accent ${map[pos]}`} />
-  );
-}
-
 export function Hero() {
-  const [clip, setClip] = useState<string>("idle");
   return (
     <section
       id="top"
-      className="relative flex min-h-dvh flex-col pt-14"
+      className="relative flex min-h-dvh flex-col justify-center px-5 pb-16 pt-24 md:px-10"
     >
-      <div className="h-2 hazard-stripe-thin" aria-hidden />
-
-      <div className="grid flex-1 grid-cols-1 gap-8 px-6 py-10 md:grid-cols-[5fr_7fr] md:gap-12 md:px-10 md:py-16">
-        {/* LEFT — jaeger panel */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="relative min-h-[420px] border border-line bg-bg-elev/50 backdrop-blur md:min-h-[600px]"
-        >
-          <Corner pos="tl" />
-          <Corner pos="tr" />
-          <Corner pos="bl" />
-          <Corner pos="br" />
-
-          {/* top label */}
-          <div className="pointer-events-none absolute left-4 right-4 top-4 z-10 flex items-center justify-between font-mono text-[10px] tracking-widest text-fg-muted">
-            <span className="flex items-center gap-2">
-              <span className="bg-accent px-1.5 py-0.5 text-fg">JGR</span>
-              MK-III // GIPSY DANGER
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-blip" />
-              ACTIVE
-            </span>
-          </div>
-
-          {/* the mecha canvas */}
-          <Mecha className="absolute inset-0" clip={clip} />
-
-          {/* clip controls */}
-          <div className="absolute bottom-16 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-            {CLIPS.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setClip(c.id)}
-                className={`border px-3 py-1.5 font-mono text-[10px] tracking-widest transition-colors ${
-                  clip === c.id
-                    ? "border-accent bg-accent text-bg"
-                    : "border-line bg-bg-elev/70 text-fg-muted hover:border-fg hover:text-fg"
-                }`}
-              >
-                {c.label}
-              </button>
-            ))}
-          </div>
-
-          {/* bottom readouts */}
-          <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-10 flex items-end justify-between font-mono text-[10px] leading-relaxed tracking-widest text-fg-muted">
-            <div>
-              <div>COORD / 35.4N 139.5E</div>
-              <div className="text-alert">◢ {clip.toUpperCase()}</div>
-            </div>
-            <div className="text-right">
-              <div>POWER / 98%</div>
-              <div className="text-accent">SYNC / 100%</div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* RIGHT — identity */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col justify-center gap-5"
-        >
-          {/* tag line — Sid's "yea, I'm batman" energy */}
-          <div className="font-mono text-base uppercase tracking-[0.25em] text-accent md:text-lg lg:text-xl">
-            yea, i&apos;m a ranger
-          </div>
-
-          {/* need a [Role]? */}
-          <div className="flex flex-col leading-[0.9]">
-            <span className="font-display text-3xl font-medium text-fg-muted md:text-5xl lg:text-6xl">
-              need a
-            </span>
-            <div className="flex items-baseline whitespace-nowrap">
-              <ShiftingText
-                words={["Developer", "Builder", "Tech Enthusiast"]}
-                className="font-display text-[14vw] font-extrabold tracking-tight text-accent whitespace-nowrap md:text-[7.5vw] lg:text-[6vw]"
-              />
-              <span className="font-display text-[14vw] font-extrabold tracking-tight text-accent md:text-[7.5vw] lg:text-[6vw]">
-                ?
-              </span>
-            </div>
-          </div>
-
-          {/* subtitle */}
-          <p className="max-w-xl font-display text-lg leading-relaxed text-fg-muted md:text-xl">
-            I&apos;m <span className="text-fg">Tribhuvan</span> — AI/ML,
-            full-stack & IoT enthusiast. CSE @ MLRIT · Technical Lead & Mentor @ CIE-MLRIT.
-          </p>
-
-          {/* explore CTA */}
-          <a
-            href="#work"
-            className="group mt-2 inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.25em] text-accent hover:text-fg"
+      <div className="mx-auto grid w-full max-w-[1200px] gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-end">
+        <div>
+          <motion.div
+            custom={0}
+            variants={reveal}
+            initial="hidden"
+            animate="show"
+            className="flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.28em] text-muted"
           >
-            <ArrowDown size={14} className="animate-blip" />
-            explore
-          </a>
+            <span className="bg-ink px-2 py-1 text-paper">Portfolio</span>
+            <span>2026 — Hyderabad, IN</span>
+          </motion.div>
+
+          <motion.h1
+            custom={1}
+            variants={reveal}
+            initial="hidden"
+            animate="show"
+            className="mt-6 font-display text-[15vw] font-extrabold leading-[0.86] tracking-tight text-ink sm:text-[12vw] lg:text-[7.5vw]"
+          >
+            I build software
+            <br />
+            that holds up in{" "}
+            <span className="mark inline-block -rotate-1">the real world</span>.
+          </motion.h1>
+
+          <motion.p
+            custom={2}
+            variants={reveal}
+            initial="hidden"
+            animate="show"
+            className="mt-8 max-w-xl font-sans text-lg leading-relaxed text-muted md:text-xl"
+          >
+            I&apos;m <span className="font-semibold text-ink">Tribhuvan</span> — an
+            AI/ML engineer and full-stack developer, and a mentor to 100+ students
+            at CIE-MLRIT. I ship research-flavored products that survive contact
+            with production.
+          </motion.p>
+
+          <motion.div
+            custom={3}
+            variants={reveal}
+            initial="hidden"
+            animate="show"
+            className="mt-9 flex flex-wrap items-center gap-4"
+          >
+            <a
+              href="#work"
+              className="brut brut-hover brut-accent group inline-flex items-center gap-2 bg-accent px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-paper"
+            >
+              View work
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </a>
+            <a
+              href={social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="brut brut-hover inline-flex items-center gap-2 px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-ink"
+            >
+              GitHub ↗
+            </a>
+          </motion.div>
+        </div>
+
+        {/* index card — brutalist spec sheet */}
+        <motion.div
+          custom={4}
+          variants={reveal}
+          initial="hidden"
+          animate="show"
+          className="brut"
+        >
+          <div className="flex items-center justify-between border-b-[2.5px] border-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-ink">
+            <span>Index card</span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-ink animate-pulse-dot" aria-hidden />
+              Live
+            </span>
+          </div>
+          <dl className="divide-y-[1.5px] divide-paper-2">
+            {FACTS.map(([k, v]) => (
+              <div key={k} className="flex flex-col gap-1 px-4 py-3.5">
+                <dt className="font-mono text-[10px] uppercase tracking-widest text-faint">{k}</dt>
+                <dd className="font-sans text-[15px] font-medium leading-snug text-ink">{v}</dd>
+              </div>
+            ))}
+          </dl>
         </motion.div>
       </div>
-
-      <HazardTicker />
     </section>
   );
 }
-
