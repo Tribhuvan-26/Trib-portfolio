@@ -56,5 +56,53 @@ export function Command() {
     return cmds.filter((c) => c.label.toLowerCase().includes(s) || c.group.toLowerCase().includes(s));
   }, [q, cmds]);
 
+  // global ⌘K / Ctrl+K toggle
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    // let the Nav (or anything) open it via a plain event; #menu deep-links it
+    const openIt = () => setOpen(true);
+    window.addEventListener("open-command", openIt);
+    if (window.location.hash === "#menu") setOpen(true);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("open-command", openIt);
+    };
+  }, []);
+
+  // reset + focus each time it opens
+  useEffect(() => {
+    if (!open) return;
+    setQ("");
+    setI(0);
+    setCopied(false);
+    const t = setTimeout(() => inputRef.current?.focus(), 30);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  useEffect(() => setI(0), [q]);
+
+  const onListKey = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setI((v) => Math.min(results.length - 1, v + 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setI((v) => Math.max(0, v - 1));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const c = results[i];
+      if (!c) return;
+      c.run();
+      if (c.id !== "copy") setOpen(false);
+    }
+  };
+
   return null;
 }
