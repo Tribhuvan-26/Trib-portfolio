@@ -1,59 +1,26 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
+import { Ticker } from "@/components/Ticker";
+import { Work } from "@/components/Work";
 import { About } from "@/components/About";
-import { Trajectory } from "@/components/Trajectory";
-import { TechNet } from "@/components/TechNet";
+import { Stack } from "@/components/Stack";
 import { Signals } from "@/components/Signals";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { Cursor } from "@/components/Cursor";
-import { HazardTicker } from "@/components/HazardTicker";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
-      <Cursor />
       <Nav />
-      <main className="relative">
+      <main className="relative pt-14">
         <Hero />
-        <Trajectory />
-        <HazardTicker
-          items={[
-            "BATTLE LOG ARCHIVED",
-            "KAIJU SIGNATURES LOGGED",
-            "DEPLOYMENT TRACE CLEAN",
-            "TARGETING SYSTEMS NOMINAL",
-          ]}
-        />
+        <Ticker />
+        <Work />
         <About />
-        <HazardTicker
-          items={[
-            "PILOT VITALS STABLE",
-            "NEURAL LOAD BALANCED",
-            "DRIFT COMPATIBLE",
-            "CONN-POD SYNCED",
-          ]}
-        />
-        <TechNet />
-        <HazardTicker
-          items={[
-            "WEAPONS ARMED",
-            "NEURAL MATRIX ONLINE",
-            "ALL SYSTEMS NOMINAL",
-            "POWER AT 100%",
-          ]}
-        />
+        <Stack />
         <Signals />
-        <HazardTicker
-          items={[
-            "FEED INTACT",
-            "TELEMETRY UPLINK ACTIVE",
-            "SHATTERDOME ONLINE",
-            "READY FOR DEPLOYMENT",
-          ]}
-        />
         <Contact />
       </main>
       <Footer />

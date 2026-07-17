@@ -1,43 +1,35 @@
-export interface KaijuEntry {
+export interface ProjectEntry {
   name: string;
-  date: string;
-  /** Pacific Rim category I–V (higher = bigger threat) */
-  category: 1 | 2 | 3 | 4 | 5;
-  location: string;
+  year: string;
+  /** short discipline tag, e.g. "Full-stack", "Machine Learning" */
+  kind: string;
   summary: string;
-  status: "DEFEATED" | "IN PURSUIT" | "ARCHIVED";
   /** GitHub repo URL, or "PRIVATE" if not public */
   repo?: string;
 }
 
-export const trajectory: KaijuEntry[] = [
+export const trajectory: ProjectEntry[] = [
   {
     name: "Campus Companion",
-    date: "2026",
-    category: 4,
-    location: "Sector / Institutional Grid",
+    year: "2026",
+    kind: "Full-stack",
     summary:
-      "Full-stack breach across attendance, grades, and HOD admin workflows. 117+ commits, role-based defenses for students, faculty, and HODs. Live deployment serving 30+ active operators.",
-    status: "IN PURSUIT",
+      "End-to-end platform for attendance, grades, and HOD admin workflows. 117+ commits, role-based access for students, faculty, and HODs. Live deployment serving 30+ active users.",
     repo: "PRIVATE",
   },
   {
     name: "DermAI",
-    date: "2026",
-    category: 4,
-    location: "Sector / Dermoscopic Trench",
+    year: "2026",
+    kind: "Machine Learning",
     summary:
-      "ResNet50 transfer-learning classifier on HAM10000. Pinned the kaiju at ~85% validation accuracy / 0.93 macro AUC across 7 lesion classes. Grad-CAM explainability armed and operational.",
-    status: "DEFEATED",
+      "ResNet50 transfer-learning classifier on HAM10000 — ~85% validation accuracy / 0.93 macro AUC across 7 lesion classes, with Grad-CAM explainability.",
     repo: "https://github.com/Tribhuvan-26/DermAI-SkinCancerDetection",
   },
   {
     name: "Into Furbish",
-    date: "2025",
-    category: 2,
-    location: "Sector / Augmented Reality",
+    year: "2025",
+    kind: "Augmented Reality",
     summary:
-      "Unity AR strike — 3D furniture placement, scaling, and layout preview piped through a mobile camera. Lightweight engagement, clean takedown.",
-    status: "DEFEATED",
+      "Unity AR app for 3D furniture placement, scaling, and layout preview through a mobile camera. Lightweight, hands-on prototyping.",
   },
 ];
