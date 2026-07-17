@@ -42,6 +42,24 @@ body {
 
 ::selection { background: var(--pop); color: var(--ink); }
 
+/* ── cursor light-table: a soft cobalt pool that follows the pointer over the
+   dossier grid, brightening the paper near the cursor ── */
+.spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, -20%),
+    color-mix(in srgb, var(--accent) 12%, transparent),
+    transparent 70%
+  );
+  transition: background 0.08s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight { display: none; }
+}
+
 *:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
