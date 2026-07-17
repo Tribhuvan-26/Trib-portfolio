@@ -11,54 +11,41 @@ export default async function OG() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#0a0e15",
+          background: "#0b0b0c",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
           fontFamily: "sans-serif",
-          color: "#f4f4ee",
+          color: "#ededed",
           position: "relative",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 14,
-            backgroundImage:
-              "repeating-linear-gradient(135deg, #ffb800 0 14px, #0a0e15 14px 28px)",
-          }}
-        />
-
-        <div
-          style={{
             display: "flex",
             justifyContent: "space-between",
             fontSize: 18,
-            color: "#98a0ad",
+            color: "#9a9aa0",
             letterSpacing: 4,
-            marginTop: 14,
           }}
         >
-          <span>PILOT 01 // IDENTITY</span>
-          <span>JAEGER MK-III</span>
+          <span>PORTFOLIO</span>
+          <span>2026</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
               fontSize: 18,
-              color: "#0a0e15",
-              backgroundColor: "#ffb800",
+              color: "#0b0b0c",
+              backgroundColor: "#8fa8c9",
               padding: "4px 10px",
               alignSelf: "flex-start",
               letterSpacing: 4,
             }}
           >
-            001 / OPERATOR DOSSIER
+            AI/ML · FULL-STACK · IOT
           </div>
           <div
             style={{
@@ -72,13 +59,13 @@ export default async function OG() {
             }}
           >
             tribhuvan
-            <span style={{ color: "#ffb800" }}>.</span>
+            <span style={{ color: "#8fa8c9" }}>.</span>
           </div>
           <div
-            style={{ fontSize: 30, color: "#98a0ad", marginTop: 18, maxWidth: 980 }}
+            style={{ fontSize: 30, color: "#9a9aa0", marginTop: 18, maxWidth: 980 }}
           >
-            AI/ML engineer &amp; full-stack pilot — research-flavored systems
-            that ship.
+            AI/ML engineer &amp; full-stack developer — fast, useful,
+            real-world software.
           </div>
         </div>
 
@@ -87,26 +74,13 @@ export default async function OG() {
             display: "flex",
             justifyContent: "space-between",
             fontSize: 16,
-            color: "#98a0ad",
+            color: "#9a9aa0",
             letterSpacing: 4,
-            marginBottom: 14,
           }}
         >
-          <span>SHATTERDOME // BUILT IN THE BAY</span>
+          <span>HYDERABAD, INDIA</span>
           <span>GITHUB / TRIBHUVAN-26</span>
         </div>
-
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 14,
-            backgroundImage:
-              "repeating-linear-gradient(135deg, #ffb800 0 14px, #0a0e15 14px 28px)",
-          }}
-        />
       </div>
     ),
     size,

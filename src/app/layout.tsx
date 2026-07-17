@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const grotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700", "800"],
   display: "swap",
 });
 
@@ -19,7 +19,7 @@ const inter = Inter({
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s · Tribhuvan",
   },
   description:
-    "Personal site of Tribhuvan — AI/ML engineer and full-stack developer building research-flavored products. CNN, RAG, Next.js, Python.",
+    "Tribhuvan — AI/ML engineer, full-stack developer, and mentor building fast, useful, real-world software. CNN, RAG, Next.js, Python.",
   keywords: [
     "Tribhuvan",
     "Tribhuvan-26",
@@ -49,13 +49,13 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     title: "Tribhuvan — AI/ML Engineer & Full-Stack Developer",
-    description: "Research-flavored products. Built with care.",
+    description: "Fast, useful, real-world software. Built with care.",
     siteName: "Tribhuvan",
   },
   twitter: {
     card: "summary_large_image",
     title: "Tribhuvan — AI/ML Engineer & Full-Stack Developer",
-    description: "Research-flavored products. Built with care.",
+    description: "Fast, useful, real-world software. Built with care.",
   },
   robots: { index: true, follow: true },
 };
@@ -75,22 +75,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${grotesk.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
-      suppressHydrationWarning
+      className={`${bricolage.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
     >
-      <head>
-        <Script
-          id="theme-script"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
-          }}
-        />
-      </head>
-      <body
-        suppressHydrationWarning
-        className="min-h-dvh bg-bg text-fg font-sans"
-      >
+      <body className="min-h-dvh bg-paper text-ink font-sans">
         <Script
           id="json-ld"
           type="application/ld+json"
