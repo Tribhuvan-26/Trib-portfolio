@@ -14,62 +14,59 @@ const SOCIALS = [
   { label: "Email", href: `mailto:${social.email}`, Icon: Mail },
 ];
 
-const ROWS = [
-  { k: "Location", v: social.location },
-  { k: "Email", v: social.email },
-  { k: "GitHub", v: `@${social.githubHandle}` },
-  { k: "LinkedIn", v: "katepally-tribhuvan" },
-];
-
 export function Contact() {
   return (
     <Section
       id="contact"
-      index="007"
-      label="CONTACT"
-      title="get in touch"
-      kicker="Reach out through any of the channels below."
+      index="05"
+      label="Contact"
+      title="Let's build"
+      kicker="Got something worth shipping? I'm one message away."
     >
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-15% 0px" }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="relative mx-auto flex w-full max-w-3xl flex-col gap-10 border border-line bg-bg-elev p-8 md:p-12"
-      >
-        {/* corner accents */}
-        <span aria-hidden className="absolute -top-px -left-px h-4 w-4 border-l-2 border-t-2 border-accent" />
-        <span aria-hidden className="absolute -top-px -right-px h-4 w-4 border-r-2 border-t-2 border-accent" />
-        <span aria-hidden className="absolute -bottom-px -left-px h-4 w-4 border-l-2 border-b-2 border-accent" />
-        <span aria-hidden className="absolute -bottom-px -right-px h-4 w-4 border-r-2 border-b-2 border-accent" />
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <motion.a
+          href={`mailto:${social.email}`}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-15% 0px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="brut brut-hover brut-accent group flex flex-col justify-between gap-8 bg-accent p-7 text-paper md:p-10"
+        >
+          <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-paper/80">
+            Email me
+          </span>
+          <span className="font-display text-3xl font-extrabold tracking-tight break-words md:text-5xl">
+            {social.email}
+          </span>
+          <span className="inline-flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest">
+            Say hello
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </span>
+        </motion.a>
 
-        {/* icon row */}
-        <div className="flex flex-wrap items-center gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-15% 0px" }}
+          transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-2 gap-4"
+        >
           {SOCIALS.map(({ label, href, Icon }) => (
             <a
               key={label}
               href={href}
               target={href.startsWith("mailto:") ? undefined : "_blank"}
               rel="noopener noreferrer"
-              aria-label={label}
-              className="group flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent text-accent transition-all hover:bg-accent hover:text-bg"
+              className="brut brut-hover flex flex-col items-start justify-between gap-6 p-5 hover:bg-pop"
             >
-              <Icon size={22} strokeWidth={1.8} className="transition-transform group-hover:scale-110" />
+              <Icon size={26} className="text-ink" />
+              <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-ink">
+                {label}
+              </span>
             </a>
           ))}
-        </div>
-
-        {/* plain text rows */}
-        <ul className="flex flex-col gap-3 font-mono text-sm leading-relaxed text-fg-muted md:text-base">
-          {ROWS.map((r) => (
-            <li key={r.k} className="flex flex-wrap items-baseline gap-3">
-              <span className="min-w-24 text-fg-faint">{r.k}</span>
-              <span className="text-fg-faint">—</span>
-              <span className="text-fg">{r.v}</span>
-            </li>
-          ))}
-        </ul>
-      </motion.div>
+        </motion.div>
+      </div>
     </Section>
   );
 }
