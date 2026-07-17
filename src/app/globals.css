@@ -47,27 +47,30 @@ body {
   outline-offset: 2px;
 }
 
-/* ── brutalist card: 2.5px ink border + hard offset shadow, shifts on hover ── */
-.brut {
-  border: 2.5px solid var(--ink);
-  background: var(--paper);
-  box-shadow: 6px 6px 0 0 var(--ink);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-.brut-hover:hover {
-  transform: translate(3px, 3px);
-  box-shadow: 3px 3px 0 0 var(--ink);
-}
-.brut-accent { box-shadow: 6px 6px 0 0 var(--accent); }
-.brut-accent.brut-hover:hover { box-shadow: 3px 3px 0 0 var(--accent); }
+/* components layer so bg-* / text-* utilities still override .brut's background */
+@layer components {
+  /* ── brutalist card: 2.5px ink border + hard offset shadow, shifts on hover ── */
+  .brut {
+    border: 2.5px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 6px 6px 0 0 var(--ink);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .brut-hover:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 0 var(--ink);
+  }
+  .brut-accent { box-shadow: 6px 6px 0 0 var(--accent); }
+  .brut-accent.brut-hover:hover { box-shadow: 3px 3px 0 0 var(--accent); }
 
-/* ── marker-pen highlight swipe behind key words ── */
-.mark {
-  background: var(--pop);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 0.12em;
-  box-shadow: 2px 2px 0 0 var(--ink);
+  /* ── marker-pen highlight swipe behind key words ── */
+  .mark {
+    background: var(--pop);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0 0.12em;
+    box-shadow: 2px 2px 0 0 var(--ink);
+  }
 }
 
 /* ── scrolling headline band (zine ticker) ── */
