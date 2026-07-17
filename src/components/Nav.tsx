@@ -37,6 +37,13 @@ export function Nav() {
               {n.label}
             </a>
           ))}
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-command"))}
+            aria-label="Open command menu"
+            className="flex items-center gap-1.5 border-[1.5px] border-ink px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-muted transition-colors hover:bg-pop hover:text-ink"
+          >
+            <kbd className="font-sans">⌘</kbd>K
+          </button>
           <a
             href="#contact"
             className="brut brut-hover brut-accent bg-accent px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-widest text-paper"
