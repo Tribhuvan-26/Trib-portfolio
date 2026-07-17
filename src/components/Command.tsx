@@ -104,5 +104,89 @@ export function Command() {
     }
   };
 
-  return null;
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.12 }}
+          className="fixed inset-0 z-[100] flex items-start justify-center bg-ink/40 px-4 pt-[14vh] backdrop-blur-[2px]"
+          onMouseDown={() => setOpen(false)}
+        >
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command menu"
+            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onKeyDown={onListKey}
+            className="brut w-full max-w-lg overflow-hidden bg-paper"
+          >
+            <div className="flex items-center gap-3 border-b-[2.5px] border-ink bg-pop px-4 py-2.5">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-ink">
+                ~/tribhuvan
+              </span>
+              <input
+                ref={inputRef}
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="type a command…"
+                className="flex-1 bg-transparent font-mono text-sm text-ink placeholder:text-ink/50 focus:outline-none"
+                aria-label="Search commands"
+              />
+              <kbd className="border-[1.5px] border-ink px-1.5 py-0.5 font-mono text-[10px] font-bold text-ink">
+                ESC
+              </kbd>
+            </div>
+
+            <ul className="max-h-[52vh] overflow-y-auto py-1.5">
+              {results.length === 0 && (
+                <li className="px-4 py-6 text-center font-mono text-[12px] tracking-widest text-faint">
+                  No matches.
+                </li>
+              )}
+              {results.map((c, idx) => (
+                <li key={c.id}>
+                  <button
+                    onMouseEnter={() => setI(idx)}
+                    onClick={() => {
+                      c.run();
+                      if (c.id !== "copy") setOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left font-mono text-[13px] transition-colors ${
+                      idx === i ? "bg-accent text-paper" : "text-ink hover:bg-paper-2"
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={`text-[10px] uppercase tracking-widest ${
+                          idx === i ? "text-paper/70" : "text-faint"
+                        }`}
+                      >
+                        {c.group}
+                      </span>
+                      <span className="font-semibold">
+                        {c.id === "copy" && copied ? "Copied ✓" : c.label}
+                      </span>
+                    </span>
+                    <span className={idx === i ? "text-paper/80" : "text-faint"}>{c.hint}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex items-center justify-between border-t-[1.5px] border-paper-2 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-faint">
+              <span>↑↓ move · ⏎ run</span>
+              <span>⌘K anytime</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
