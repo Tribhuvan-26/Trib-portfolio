@@ -3,21 +3,27 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { social } from "@/config/social";
+import { projects } from "@/config/projects";
+import { useTheme } from "@/lib/theme";
+import { useMod } from "@/lib/useMod";
 
 type Cmd = {
   id: string;
   label: string;
   hint: string;
-  group: "Navigate" | "Links" | "Actions";
+  group: "Navigate" | "Projects" | "Links" | "Actions";
   run: () => void;
 };
 
 export function Command() {
+  const { theme, toggle } = useTheme();
+  const mod = useMod();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [i, setI] = useState(0);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const go = (id: string) => () => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -32,6 +38,13 @@ export function Command() {
       { id: "signals", label: "Signals", hint: "04", group: "Navigate", run: go("signals") },
       { id: "contact", label: "Contact", hint: "05", group: "Navigate", run: go("contact") },
       { id: "top", label: "Back to top", hint: "↑", group: "Navigate", run: go("top") },
+      ...projects.map((p) => ({
+        id: `p-${p.id}`,
+        label: p.title,
+        hint: p.year,
+        group: "Projects" as const,
+        run: go(p.id),
+      })),
       { id: "gh", label: "GitHub", hint: "↗", group: "Links", run: link(social.github) },
       { id: "li", label: "LinkedIn", hint: "↗", group: "Links", run: link(social.linkedin) },
       { id: "tw", label: "Twitter / X", hint: "↗", group: "Links", run: link(social.twitter) },
@@ -46,8 +59,16 @@ export function Command() {
         },
       },
       { id: "mail", label: "Send an email", hint: "→", group: "Actions", run: link(`mailto:${social.email}`) },
+      { id: "resume", label: "Download résumé", hint: "⇩", group: "Actions", run: link("/resume.pdf") },
+      {
+        id: "theme",
+        label: theme === "dark" ? "Switch to light" : "Switch to dark",
+        hint: theme === "dark" ? "☀" : "☾",
+        group: "Actions",
+        run: toggle,
+      },
     ],
-    [],
+    [theme, toggle],
   );
 
   const results = useMemo(() => {
@@ -88,7 +109,18 @@ export function Command() {
 
   useEffect(() => setI(0), [q]);
 
+  // keep the keyboard-selected row visible when it scrolls past the fold
+  useEffect(() => {
+    listRef.current?.querySelectorAll("button")[i]?.scrollIntoView({ block: "nearest" });
+  }, [i]);
+
   const onListKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Tab") {
+      // trap focus inside the dialog — nothing behind it should be tabbable
+      e.preventDefault();
+      setI((v) => (e.shiftKey ? Math.max(0, v - 1) : Math.min(results.length - 1, v + 1)));
+      return;
+    }
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setI((v) => Math.min(results.length - 1, v + 1));
@@ -100,7 +132,7 @@ export function Command() {
       const c = results[i];
       if (!c) return;
       c.run();
-      if (c.id !== "copy") setOpen(false);
+      if (c.id !== "copy" && c.id !== "theme") setOpen(false);
     }
   };
 
@@ -144,7 +176,11 @@ export function Command() {
               </kbd>
             </div>
 
-            <ul className="max-h-[52vh] overflow-y-auto py-1.5">
+            <ul
+              ref={listRef}
+              data-lenis-prevent
+              className="max-h-[52vh] overflow-y-auto py-1.5"
+            >
               {results.length === 0 && (
                 <li className="px-4 py-6 text-center font-mono text-[12px] tracking-widest text-faint">
                   No matches.
@@ -156,7 +192,7 @@ export function Command() {
                     onMouseEnter={() => setI(idx)}
                     onClick={() => {
                       c.run();
-                      if (c.id !== "copy") setOpen(false);
+                      if (c.id !== "copy" && c.id !== "theme") setOpen(false);
                     }}
                     className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left font-mono text-[13px] transition-colors ${
                       idx === i ? "bg-accent text-paper" : "text-ink hover:bg-paper-2"
@@ -182,7 +218,7 @@ export function Command() {
 
             <div className="flex items-center justify-between border-t-[1.5px] border-paper-2 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-faint">
               <span>↑↓ move · ⏎ run</span>
-              <span>⌘K anytime</span>
+              <span>{mod}K anytime</span>
             </div>
           </motion.div>
         </motion.div>
