@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/theme";
+import { useMod } from "@/lib/useMod";
 
 const NAV = [
   { label: "Work", href: "#work" },
@@ -12,6 +14,8 @@ const NAV = [
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const { theme, toggle } = useTheme();
+  const mod = useMod();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -37,12 +41,27 @@ export function Nav() {
               {n.label}
             </a>
           ))}
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-[12px] font-medium uppercase tracking-widest text-muted transition-colors hover:text-ink"
+          >
+            Résumé
+          </a>
           <button
             onClick={() => window.dispatchEvent(new Event("open-command"))}
             aria-label="Open command menu"
-            className="flex items-center gap-1.5 border-[1.5px] border-ink px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-muted transition-colors hover:bg-pop hover:text-ink"
+            className="flex items-center gap-1 border-[1.5px] border-ink px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-muted transition-colors hover:bg-pop hover:text-ink"
           >
-            <kbd className="font-sans">⌘</kbd>K
+            <kbd className="font-sans normal-case">{mod}</kbd>K
+          </button>
+          <button
+            onClick={toggle}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            className="grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop"
+          >
+            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
           </button>
           <a
             href="#contact"
@@ -74,6 +93,25 @@ export function Nav() {
               {n.label}
             </a>
           ))}
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="border-b border-paper-2 py-3 font-display text-2xl font-bold text-ink"
+          >
+            Résumé
+          </a>
+          <button
+            onClick={() => {
+              toggle();
+              setOpen(false);
+            }}
+            className="flex items-center gap-2 border-b border-paper-2 py-3 text-left font-display text-2xl font-bold text-ink"
+          >
+            {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
+            {theme === "dark" ? "Light mode" : "Dark mode"}
+          </button>
           <a
             href="#contact"
             onClick={() => setOpen(false)}
