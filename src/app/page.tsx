@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Command } from "@/components/Command";
 import { Spotlight } from "@/components/Spotlight";
+import { KbdHint } from "@/components/KbdHint";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <SmoothScroll />
       <Spotlight />
       <Command />
+      <KbdHint />
       <Nav />
       <main className="relative pt-14">
         <Hero />
