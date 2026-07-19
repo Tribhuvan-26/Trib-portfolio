@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, FileDown } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { useMod } from "@/lib/useMod";
 
@@ -43,11 +43,11 @@ export function Nav() {
           ))}
           <a
             href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-[12px] font-medium uppercase tracking-widest text-muted transition-colors hover:text-ink"
+            download="Tribhuvan-Resume.pdf"
+            aria-label="Download résumé"
+            className="group grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop"
           >
-            Résumé
+            <FileDown size={15} className="transition-transform group-hover:translate-y-0.5" />
           </a>
           <button
             onClick={() => window.dispatchEvent(new Event("open-command"))}
@@ -95,11 +95,11 @@ export function Nav() {
           ))}
           <a
             href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+            download="Tribhuvan-Resume.pdf"
             onClick={() => setOpen(false)}
-            className="border-b border-paper-2 py-3 font-display text-2xl font-bold text-ink"
+            className="flex items-center gap-2 border-b border-paper-2 py-3 font-display text-2xl font-bold text-ink"
           >
+            <FileDown size={22} />
             Résumé
           </a>
           <button

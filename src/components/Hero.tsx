@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileDown } from "lucide-react";
 import { social } from "@/config/social";
 
 const reveal = {
@@ -14,7 +14,7 @@ const reveal = {
 };
 
 const FACTS = [
-  ["Now", "Technical Lead & Mentor @ CIE-MLRIT"],
+  ["Now", "Technical Mentor @ CIE-MLRIT"],
   ["Focus", "AI/ML · Full-stack · IoT"],
   ["Based", social.location],
   ["Status", "Open to collaborate"],
@@ -60,7 +60,7 @@ export function Hero() {
             className="mt-8 max-w-xl font-sans text-lg leading-relaxed text-muted md:text-xl"
           >
             I&apos;m <span className="font-semibold text-ink">Tribhuvan</span> — an
-            AI/ML engineer and full-stack developer, and a mentor to 100+ students
+            AI/ML engineer and full-stack developer, and a mentor to 200+ students
             at CIE-MLRIT. I ship research-flavored products that survive contact
             with production.
           </motion.p>
@@ -78,6 +78,14 @@ export function Hero() {
             >
               View work
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </a>
+            <a
+              href="/resume.pdf"
+              download="Tribhuvan-Resume.pdf"
+              className="brut brut-hover group inline-flex items-center gap-2 px-5 py-3 font-mono text-sm font-bold uppercase tracking-widest text-ink"
+            >
+              <FileDown size={16} className="transition-transform group-hover:translate-y-0.5" />
+              Résumé
             </a>
             <a
               href={social.github}
@@ -101,8 +109,8 @@ export function Hero() {
           <div className="flex items-center justify-between border-b-[2.5px] border-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-ink">
             <span>Index card</span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-ink animate-pulse-dot" aria-hidden />
-              Live
+              <span className="h-2 w-2 rounded-full bg-ink" aria-hidden />
+              2026
             </span>
           </div>
           <dl className="divide-y-[1.5px] divide-paper-2">

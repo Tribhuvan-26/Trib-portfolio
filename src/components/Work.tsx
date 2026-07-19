@@ -8,12 +8,34 @@ import { Section } from "./Section";
 function Card({ project, n }: { project: Project; n: number }) {
   return (
     <motion.article
+      id={project.id}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="brut p-6 md:p-8"
+      className="brut scroll-mt-24 overflow-hidden"
     >
+      {/* cover band — generative dot-grid + ghost index; drop a real screenshot
+          in later by adding an `image` field and rendering an <img> here */}
+      <div
+        className="relative flex h-28 items-center justify-between overflow-hidden border-b-[2.5px] border-ink bg-paper-2 px-6 md:h-32 md:px-8"
+        style={{
+          backgroundImage:
+            "radial-gradient(var(--ink) 1.1px, transparent 1.1px)",
+          backgroundSize: "16px 16px",
+          backgroundPosition: "-4px -4px",
+        }}
+        aria-hidden
+      >
+        <span className="font-display text-[5.5rem] font-extrabold leading-none tracking-tighter text-ink/[0.08] md:text-[7rem]">
+          {String(n).padStart(2, "0")}
+        </span>
+        <span className="bg-accent px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-paper">
+          {project.id}
+        </span>
+      </div>
+
+      <div className="p-6 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-baseline gap-4">
           <span className="font-display text-3xl font-extrabold text-accent md:text-4xl">
@@ -70,6 +92,7 @@ function Card({ project, n }: { project: Project; n: number }) {
           ))}
         </div>
       )}
+      </div>
     </motion.article>
   );
 }

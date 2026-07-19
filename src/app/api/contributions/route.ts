@@ -1,9 +1,9 @@
 import { social } from "@/config/social";
 
 export const runtime = 'nodejs';
-// Regenerate the cached function at most every 15 min so the calendar tracks
-// fresh commits instead of sitting stale for a full hour.
-export const revalidate = 900;
+// Always hit GitHub live (no Next data-cache); the CDN edge caches the response
+// for 10s via Cache-Control below. GitHub's own graph lags a few min anyway.
+export const dynamic = "force-dynamic";
 
 const QUERY = `
   query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -38,12 +38,14 @@ export async function GET() {
     return Response.json({ error: "missing_token" }, { status: 500 });
   }
 
-  // Year-to-date: Jan 1 of the current year → now. Computed each request so it
-  // rolls over automatically next year — no hardcoded 2026.
+  // Whole current year, not `now`: GitHub buckets contributions by the account's
+  // local timezone, so a `to = now` (UTC) drops "today's" commits made past
+  // midnight in a +5:30 zone. End-of-year `to` captures them; GitHub returns
+  // only up to the present anyway. Rolls over automatically each year.
   const now = new Date();
   const year = now.getUTCFullYear();
   const from = `${year}-01-01T00:00:00Z`;
-  const to = now.toISOString();
+  const to = `${year}-12-31T23:59:59Z`;
 
   const res = await fetch("https://api.github.com/graphql", {
     method: "POST",
@@ -55,7 +57,7 @@ export async function GET() {
       query: QUERY,
       variables: { login: social.githubHandle, from, to },
     }),
-    next: { revalidate: 900 },
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -87,7 +89,7 @@ export async function GET() {
         // Let the CDN serve a cached copy for 15 min, then hand out the stale
         // one while it refetches in the background — no stuck-for-an-hour feed,
         // no hammering the GitHub API on every hit.
-        "Cache-Control": "public, s-maxage=900, stale-while-revalidate=1800",
+        "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30",
       },
     },
   );

@@ -19,8 +19,20 @@ export const projects: Project[] = [
     role: "Solo",
     stack: ["TypeScript", "Next.js", "Supabase", "Tailwind"],
     metric: "30+ active users",
+    links: [{ label: "Live", href: "https://campus-companion-mu.vercel.app" }],
+  },
+  {
+    id: "workshop-carnival",
+    year: "2026",
+    title: "Workshop Carnival Chatbot",
+    summary:
+      "AI assistant for MLRIT's Workshop Carnival, answering attendee queries on schedules, registration, and event details. Retrieval-augmented generation with Gemini 2.5 Flash over indexed event content for context-grounded answers.",
+    role: "Solo",
+    stack: ["React", "Vite", "FastAPI", "Gemini 2.5 Flash", "RAG"],
+    metric: "Live event deployment",
     links: [
-      { label: "Live", href: "https://campus-companion-mu.vercel.app" },
+      { label: "Live", href: "https://wc.mlritcie.in" },
+      { label: "GitHub", href: "https://github.com/Tribhuvan-26/wc-chatbot" },
     ],
   },
   {
@@ -35,8 +47,21 @@ export const projects: Project[] = [
     links: [
       {
         label: "GitHub",
-        href: "https://github.com/Tribhuvan-26/DermAI-SkinCancerDetection",
+        href: "https://github.com/Tribhuvan-26/Skin-cancer-classification",
       },
+    ],
+  },
+  {
+    id: "auraloop",
+    year: "2026",
+    title: "AuraLoop",
+    summary:
+      "Cross-platform Gen-Z fintech app that rounds up everyday transactions to the nearest ₹10/20/50 into savings goal jars. On-device Android SMS parsing auto-imports bank transactions with zero server uploads, plus a weekly “aura score” spend-health summary.",
+    role: "Solo",
+    stack: ["React", "Vite", "Tailwind", "Capacitor"],
+    metric: "On-device · zero uploads",
+    links: [
+      { label: "GitHub", href: "https://github.com/345678o/finance-controller" },
     ],
   },
   {

@@ -29,6 +29,12 @@ export function Command() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
   const link = (href: string) => () => window.open(href, "_blank", "noopener");
+  const download = (href: string, name: string) => () => {
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = name;
+    a.click();
+  };
 
   const cmds = useMemo<Cmd[]>(
     () => [
@@ -59,7 +65,7 @@ export function Command() {
         },
       },
       { id: "mail", label: "Send an email", hint: "→", group: "Actions", run: link(`mailto:${social.email}`) },
-      { id: "resume", label: "Download résumé", hint: "⇩", group: "Actions", run: link("/resume.pdf") },
+      { id: "resume", label: "Download résumé", hint: "⇩", group: "Actions", run: download("/resume.pdf", "Tribhuvan-Resume.pdf") },
       {
         id: "theme",
         label: theme === "dark" ? "Switch to light" : "Switch to dark",
@@ -82,7 +88,7 @@ export function Command() {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((v) => !v);
+        setOpen(true); // open-only; Esc closes — no toggle flicker
       }
       if (e.key === "Escape") setOpen(false);
     };

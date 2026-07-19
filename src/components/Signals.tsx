@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { social } from "@/config/social";
+import { useTheme } from "@/lib/theme";
 import { Section } from "./Section";
 import { NowPlaying } from "./NowPlaying";
 
@@ -22,12 +23,14 @@ const ActivityCalendar = dynamic(
   },
 );
 
-// cobalt ramp on paper — empty cell is the paper-2 grid tone, then ramps to accent
+// cobalt ramp — empty cell is the paper-2 grid tone, then ramps to accent
 const CALENDAR_THEME = {
   light: ["#e0dccd", "#b9c0ff", "#8090ff", "#4d5eff", "#2b39ff"],
+  dark: ["#201f16", "#2f3a7a", "#4450c9", "#5a68f0", "#6b78ff"],
 };
 
 export function Signals() {
+  const { theme } = useTheme();
   const [payload, setPayload] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const calWrap = useRef<HTMLDivElement>(null);
@@ -68,7 +71,7 @@ export function Signals() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-15% 0px" }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="grid gap-6 lg:grid-cols-[1fr_360px]"
+        className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start"
       >
         <div className="brut flex flex-col">
           <div className="flex items-center justify-between border-b-[2.5px] border-ink px-4 py-2.5">
@@ -93,7 +96,7 @@ export function Signals() {
             {!err && payload && (
               <ActivityCalendar
                 data={payload.data}
-                colorScheme="light"
+                colorScheme={theme}
                 theme={CALENDAR_THEME}
                 fontSize={12}
                 blockSize={12}

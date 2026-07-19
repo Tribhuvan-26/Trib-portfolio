@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { Section } from "./Section";
 
 const STATS = [
-  ["100+", "Students mentored"],
-  ["2×", "Delivery rate lift"],
+  ["200+", "Students mentored"],
+  ["+40%", "Delivery rate lift"],
   ["30+", "Users in prod"],
   ["117+", "Commits, one build"],
 ];
@@ -60,10 +60,10 @@ export function About() {
               The day job
             </h3>
             <p className="font-sans text-base leading-relaxed text-muted md:text-lg">
-              Leading and mentoring 100+ students at CIE-MLRIT across IoT,
-              vibe-coding, CAD, and additive manufacturing — pushing project
-              delivery rate up 2×, and shipping a Python application now serving
-              30+ institutional users.
+              Mentoring 200+ students at CIE-MLRIT across IoT, vibe-coding, CAD,
+              and additive manufacturing — pushing project delivery rate up 40%,
+              and shipping a Python application now serving 30+ institutional
+              users.
             </p>
           </motion.div>
         </div>
