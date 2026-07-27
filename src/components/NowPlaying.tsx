@@ -143,7 +143,7 @@ export function NowPlaying() {
 
       <div className="relative z-10 flex flex-1 flex-col">
         <div
-          className={`flex items-center justify-between border-b-[2.5px] border-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-black uppercase tracking-widest text-ink`}
+          className={`flex items-center justify-between border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-black uppercase tracking-widest text-pop-ink`}
         >
           <span className="flex items-center gap-2.5">
             {playing ? (

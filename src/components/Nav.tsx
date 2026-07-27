@@ -45,21 +45,21 @@ export function Nav() {
             href="/resume.pdf"
             download="Tribhuvan-Resume.pdf"
             aria-label="Download résumé"
-            className="group grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop"
+            className="group grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop hover:text-pop-ink"
           >
             <FileDown size={15} className="transition-transform group-hover:translate-y-0.5" />
           </a>
           <button
             onClick={() => window.dispatchEvent(new Event("open-command"))}
             aria-label="Open command menu"
-            className="flex items-center gap-1 border-[1.5px] border-ink px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-muted transition-colors hover:bg-pop hover:text-ink"
+            className="flex items-center gap-1 border-[1.5px] border-ink px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-widest text-muted transition-colors hover:bg-pop hover:text-pop-ink"
           >
             <kbd className="font-sans normal-case">{mod}</kbd>K
           </button>
           <button
             onClick={toggle}
             aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop"
+            className="grid h-8 w-8 place-items-center border-[1.5px] border-ink text-ink transition-colors hover:bg-pop hover:text-pop-ink"
           >
             {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
           </button>

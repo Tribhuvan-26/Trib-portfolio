@@ -165,8 +165,8 @@ export function Command() {
             onKeyDown={onListKey}
             className="brut w-full max-w-lg overflow-hidden bg-paper"
           >
-            <div className="flex items-center gap-3 border-b-[2.5px] border-ink bg-pop px-4 py-2.5">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-ink">
+            <div className="flex items-center gap-3 border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-pop-ink">
                 ~/tribhuvan
               </span>
               <input
@@ -174,10 +174,10 @@ export function Command() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="type a command…"
-                className="flex-1 bg-transparent font-mono text-sm text-ink placeholder:text-ink/50 focus:outline-none"
+                className="flex-1 bg-transparent font-mono text-sm text-pop-ink placeholder:text-pop-ink/50 focus:outline-none"
                 aria-label="Search commands"
               />
-              <kbd className="border-[1.5px] border-ink px-1.5 py-0.5 font-mono text-[10px] font-bold text-ink">
+              <kbd className="border-[1.5px] border-pop-ink px-1.5 py-0.5 font-mono text-[10px] font-bold text-pop-ink">
                 ESC
               </kbd>
             </div>

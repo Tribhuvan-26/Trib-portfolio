@@ -84,7 +84,7 @@ function Card({ project, n }: { project: Project; n: number }) {
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="brut brut-hover group inline-flex items-center gap-1.5 bg-pop px-3.5 py-2 font-mono text-[12px] font-bold uppercase tracking-widest text-ink"
+              className="brut brut-hover group inline-flex items-center gap-1.5 bg-pop px-3.5 py-2 font-mono text-[12px] font-bold uppercase tracking-widest text-pop-ink"
             >
               {l.label}
               <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

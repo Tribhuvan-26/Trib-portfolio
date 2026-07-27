@@ -61,7 +61,7 @@ export function StatHUD() {
       <button
         onClick={() => setHidden(true)}
         aria-label="Dismiss"
-        className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center border-[1.5px] border-ink bg-pop text-ink hover:bg-ink hover:text-paper"
+        className="absolute -right-2 -top-2 grid h-5 w-5 place-items-center border-[1.5px] border-ink bg-pop text-pop-ink hover:bg-ink hover:text-paper"
       >
         <X size={11} strokeWidth={3} />
       </button>

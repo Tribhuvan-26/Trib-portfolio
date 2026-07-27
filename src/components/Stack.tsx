@@ -15,7 +15,7 @@ const LAYERS: { label: string; nodes: string[] }[] = [
 function Chip({ label }: { label: string }) {
   const icon = hasIcon(label);
   return (
-    <span className="flex items-center gap-2 border-[1.5px] border-ink bg-paper px-2.5 py-1.5 font-mono text-[12px] tracking-wide text-ink transition-colors hover:bg-pop">
+    <span className="flex items-center gap-2 border-[1.5px] border-ink bg-paper px-2.5 py-1.5 font-mono text-[12px] tracking-wide text-ink transition-colors hover:bg-pop hover:text-pop-ink">
       {icon && <TechIcon name={label} size={15} className="text-ink" />}
       {label}
     </span>

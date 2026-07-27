@@ -106,10 +106,10 @@ export function Hero() {
           animate="show"
           className="brut"
         >
-          <div className="flex items-center justify-between border-b-[2.5px] border-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-ink">
+          <div className="flex items-center justify-between border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-pop-ink">
             <span>Index card</span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-ink" aria-hidden />
+              <span className="h-2 w-2 rounded-full bg-pop-ink" aria-hidden />
               2026
             </span>
           </div>

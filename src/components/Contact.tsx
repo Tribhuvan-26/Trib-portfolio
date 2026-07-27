@@ -57,7 +57,7 @@ export function Contact() {
               href={href}
               target={href.startsWith("mailto:") ? undefined : "_blank"}
               rel="noopener noreferrer"
-              className="brut brut-hover flex flex-col items-start justify-between gap-6 p-5 hover:bg-pop"
+              className="brut brut-hover flex flex-col items-start justify-between gap-6 p-5 hover:bg-pop hover:text-pop-ink hover:[&_svg]:text-pop-ink"
             >
               <Icon size={26} className="text-ink" />
               <span className="font-mono text-[12px] font-bold uppercase tracking-widest text-ink">

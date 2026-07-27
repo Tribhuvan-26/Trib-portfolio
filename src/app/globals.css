@@ -8,6 +8,7 @@
   --color-faint: var(--faint);
   --color-accent: var(--accent);
   --color-pop: var(--pop);
+  --color-pop-ink: var(--pop-ink);
   --color-line: var(--ink);
 
   --font-display: var(--font-bricolage);
@@ -24,6 +25,7 @@
   --faint: #8f8c7e;
   --accent: #2b39ff;   /* electric cobalt */
   --pop: #ffe14d;      /* marker yellow */
+  --pop-ink: #16150e;  /* pop never inverts, so its ink never does either */
   color-scheme: light;
 }
 
@@ -54,7 +56,7 @@ body {
   background-size: 64px 64px;
 }
 
-::selection { background: var(--pop); color: var(--ink); }
+::selection { background: var(--pop); color: var(--pop-ink); }
 
 /* ── cursor light-table: a soft cobalt pool that follows the pointer over the
    dossier grid, brightening the paper near the cursor ── */
