@@ -3,7 +3,7 @@
 Personal portfolio site for **Tribhuvan** (AI/ML Engineer & Full-Stack Developer).
 Single-page, cockpit/"Shatterdome"-themed Next.js app with an interactive 3D
 Jaeger (Gipsy Danger), light/dark theming, smooth scroll, and a live GitHub
-contribution feed.
+contribution feed. Wanted a neo brutalism to make it feel a lil gud
 
 > This README is the project map — read it first to understand what lives where.
 
