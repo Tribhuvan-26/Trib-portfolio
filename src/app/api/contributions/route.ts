@@ -38,12 +38,11 @@ export async function GET() {
     return Response.json({ error: "missing_token" }, { status: 500 });
   }
 
-  // Whole current year, not `now`: GitHub buckets contributions by the account's
-  // local timezone, so a `to = now` (UTC) drops "today's" commits made past
-  // midnight in a +5:30 zone. End-of-year `to` captures them; GitHub returns
-  // only up to the present anyway. Rolls over automatically each year.
-  const now = new Date();
-  const year = now.getUTCFullYear();
+  // "Today" in the account's local zone (+05:30), not UTC: GitHub buckets
+  // contributions by that zone, so a UTC `today` drops commits made past local
+  // midnight. Query the whole calendar year, then trim the future off below.
+  const today = new Date(Date.now() + 5.5 * 3600_000).toISOString().slice(0, 10);
+  const year = Number(today.slice(0, 4));
   const from = `${year}-01-01T00:00:00Z`;
   const to = `${year}-12-31T23:59:59Z`;
 
@@ -73,23 +72,26 @@ export async function GET() {
     return Response.json({ error: "shape", body: json }, { status: 502 });
   }
 
-  const data = cal.weeks.flatMap(
-    (w: { contributionDays: Array<{ date: string; contributionCount: number; contributionLevel: string }> }) =>
-      w.contributionDays.map((d) => ({
-        date: d.date,
-        count: d.contributionCount,
-        level: LEVEL_MAP[d.contributionLevel] ?? 0,
-      })),
-  );
+  // GitHub returns the full requested range, including future days as zeroes.
+  // Keep them and the graph renders ~5 months of empty cells past today.
+  const data = cal.weeks
+    .flatMap(
+      (w: { contributionDays: Array<{ date: string; contributionCount: number; contributionLevel: string }> }) =>
+        w.contributionDays.map((d) => ({
+          date: d.date,
+          count: d.contributionCount,
+          level: LEVEL_MAP[d.contributionLevel] ?? 0,
+        })),
+    )
+    .filter((d: { date: string }) => d.date <= today);
 
   return Response.json(
     { total: cal.totalContributions, data, year },
     {
       headers: {
-        // Let the CDN serve a cached copy for 15 min, then hand out the stale
-        // one while it refetches in the background — no stuck-for-an-hour feed,
-        // no hammering the GitHub API on every hit.
-        "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30",
+        // Client polls every 5s; cap origin hits to match. No
+        // stale-while-revalidate — it would hand out data up to 30s old.
+        "Cache-Control": "public, s-maxage=5",
       },
     },
   );
