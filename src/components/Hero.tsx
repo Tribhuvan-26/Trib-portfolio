@@ -14,7 +14,7 @@ const reveal = {
 };
 
 const FACTS = [
-  ["Now", "Technical Mentor @ CIE-MLRIT"],
+  ["Now", "Technical Lead & Mentor @ CIE-MLRIT"],
   ["Focus", "AI/ML · Full-stack · IoT"],
   ["Based", social.location],
   ["Status", "Open to collaborate"],
@@ -60,8 +60,9 @@ export function Hero() {
             className="mt-8 max-w-xl font-sans text-lg leading-relaxed text-muted md:text-xl"
           >
             I&apos;m <span className="font-semibold text-ink">Tribhuvan</span> — an
-            AI/ML engineer and full-stack developer, and a mentor to 200+ students
-            at CIE-MLRIT. I ship research-flavored products that survive contact
+            AI/ML engineer and full-stack developer, technical lead and mentor to
+            200+ students at CIE-MLRIT. I ship research-flavored products that
+            survive contact
             with production.
           </motion.p>
 

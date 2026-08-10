@@ -60,8 +60,9 @@ export function About() {
               The day job
             </h3>
             <p className="font-sans text-base leading-relaxed text-muted md:text-lg">
-              Mentoring 200+ students at CIE-MLRIT across IoT, vibe-coding, CAD,
-              and additive manufacturing — pushing project delivery rate up 40%,
+              Technical lead and mentor at CIE-MLRIT — 200+ students across IoT,
+              vibe-coding, CAD, and additive manufacturing, pushing project
+              delivery rate up 40%,
               and shipping a Python application now serving 30+ institutional
               users.
             </p>
