@@ -37,26 +37,32 @@ export function Signals() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/contributions")
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.statusText)))
-      .then((j: Payload) => {
-        if (!cancelled) setPayload(j);
-      })
-      .catch((e) => !cancelled && setErr(String(e)));
+    const load = () =>
+      fetch("/api/contributions")
+        .then((r) => (r.ok ? r.json() : Promise.reject(r.statusText)))
+        .then((j: Payload) => {
+          if (!cancelled) setPayload(j);
+        })
+        .catch((e) => !cancelled && setErr(String(e)));
+    load();
+    const id = setInterval(load, 5000);
     return () => {
       cancelled = true;
+      clearInterval(id);
     };
   }, []);
 
-  // scroll the calendar to the newest month once it renders
+  // scroll the calendar to the newest month once it renders — `ready` (not
+  // `payload`) so the 5s poll doesn't yank the scroll back on every refresh
+  const ready = payload !== null;
   useEffect(() => {
-    if (!payload) return;
+    if (!ready) return;
     const t = setTimeout(() => {
       const el = calWrap.current;
       if (el) el.scrollLeft = el.scrollWidth;
     }, 120);
     return () => clearTimeout(t);
-  }, [payload]);
+  }, [ready]);
 
   return (
     <Section
