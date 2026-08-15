@@ -9,14 +9,12 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Command } from "@/components/Command";
-import { Spotlight } from "@/components/Spotlight";
 import { StatHUD } from "@/components/StatHUD";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
-      <Spotlight />
       <Command />
       <StatHUD />
       <Nav />
