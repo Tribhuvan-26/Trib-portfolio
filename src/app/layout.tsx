@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo_Black, Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider, themeInitScript } from "@/lib/theme";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const archivoBlack = Archivo_Black({
+  variable: "--font-archivo-black",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -77,7 +77,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${bricolage.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
+      className={`${archivoBlack.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
     >
       <head>
         {/* apply theme before paint — no light-flash on load */}
