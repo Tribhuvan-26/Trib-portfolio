@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-unknown-property */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, extend, useFrame, useThree, type ThreeElement } from "@react-three/fiber";
 import { useGLTF, useTexture, Environment, Lightformer } from "@react-three/drei";
 import {
   BallCollider,
@@ -18,6 +18,13 @@ import * as THREE from "three";
 import { social } from "@/config/social";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    meshLineGeometry: ThreeElement<typeof MeshLineGeometry>;
+    meshLineMaterial: ThreeElement<typeof MeshLineMaterial>;
+  }
+}
 
 const CARD_GLB = "/lanyard/card.glb";
 const LANYARD_PNG = "/lanyard/lanyard.png";
@@ -127,8 +134,8 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
 
   const cardMap = useMemo(() => {
     const baseMap = materials.base.map;
-    const baseImg = baseMap?.image;
-    const frontImg = frontTex?.image;
+    const baseImg = baseMap?.image as HTMLImageElement | undefined;
+    const frontImg = frontTex?.image as HTMLImageElement | undefined;
     if (!baseImg) return baseMap;
 
     const W = baseImg.width;
@@ -176,7 +183,7 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
 
     const composite = new THREE.CanvasTexture(canvas);
     composite.colorSpace = THREE.SRGBColorSpace;
-    composite.flipY = baseMap.flipY;
+    composite.flipY = baseMap?.flipY ?? true;
     composite.anisotropy = 16;
     composite.needsUpdate = true;
     return composite;
@@ -283,10 +290,11 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
+          args={[{ resolution: new THREE.Vector2(1000, 1000) }]}
           color="white"
           depthTest={false}
           resolution={[1000, 1000]}
-          useMap
+          useMap={1}
           map={texture}
           repeat={[-4, 1]}
           lineWidth={1}
