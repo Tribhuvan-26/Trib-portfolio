@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, FileDown } from "lucide-react";
 import { social } from "@/config/social";
+import { Lanyard } from "./Lanyard";
 
 const reveal = {
   hidden: { opacity: 0, y: 18 },
@@ -21,12 +23,13 @@ const FACTS = [
 ];
 
 export function Hero() {
+  const [cardDragging, setCardDragging] = useState(false);
   return (
     <section
       id="top"
       className="relative flex min-h-dvh flex-col justify-center px-5 pb-16 pt-24 md:px-10"
     >
-      <div className="mx-auto grid w-full max-w-[1200px] gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-end">
+      <div className="mx-auto grid w-full max-w-[1200px] gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
         <div>
           <motion.div
             custom={0}
@@ -99,29 +102,38 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* index card — brutalist spec sheet */}
+        {/* index card, hung from a physics lanyard that fills the column */}
         <motion.div
           custom={4}
           variants={reveal}
           initial="hidden"
           animate="show"
-          className="brut"
+          className="flex h-full min-h-[560px] flex-col"
         >
-          <div className="flex items-center justify-between border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-pop-ink">
-            <span>Index card</span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-pop-ink" aria-hidden />
-              2026
-            </span>
+          <div
+            className={`relative min-h-0 flex-1 ${cardDragging ? "overflow-visible" : "overflow-hidden"}`}
+          >
+            <div className={`absolute overflow-visible ${cardDragging ? "inset-[-150%]" : "inset-0"}`}>
+              <Lanyard onDragChange={setCardDragging} />
+            </div>
           </div>
-          <dl className="divide-y-[1.5px] divide-paper-2">
-            {FACTS.map(([k, v]) => (
-              <div key={k} className="flex flex-col gap-1 px-4 py-3.5">
-                <dt className="font-mono text-[10px] uppercase tracking-widest text-faint">{k}</dt>
-                <dd className="font-sans text-[15px] font-medium leading-snug text-ink">{v}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="brut relative">
+            <div className="flex items-center justify-between border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-pop-ink">
+              <span>Index card</span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-pop-ink" aria-hidden />
+                2026
+              </span>
+            </div>
+            <dl className="divide-y-[1.5px] divide-paper-2">
+              {FACTS.map(([k, v]) => (
+                <div key={k} className="flex flex-col gap-1 px-4 py-3.5">
+                  <dt className="font-mono text-[10px] uppercase tracking-widest text-faint">{k}</dt>
+                  <dd className="font-sans text-[15px] font-medium leading-snug text-ink">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </motion.div>
       </div>
     </section>
