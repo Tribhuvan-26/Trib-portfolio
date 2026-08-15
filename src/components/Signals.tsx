@@ -41,7 +41,10 @@ export function Signals() {
       fetch("/api/contributions")
         .then((r) => (r.ok ? r.json() : Promise.reject(r.statusText)))
         .then((j: Payload) => {
-          if (!cancelled) setPayload(j);
+          if (!cancelled) {
+            setPayload(j);
+            setErr(null);
+          }
         })
         .catch((e) => !cancelled && setErr(String(e)));
     load();
