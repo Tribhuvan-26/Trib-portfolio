@@ -199,9 +199,3 @@ about copy + `STATS` (`About.tsx`), `LAYERS` (`Stack.tsx`), ticker words
   off-screen. Gate it on `document.visibilityState` if the API budget gets tight.
 
 ---
-
-## Conventions
-
-- `AGENTS.md` / `CLAUDE.md` hold agent instructions (checked in). `CLAUDE.md`
-  just imports `AGENTS.md`.
-- Commit style: short scoped prefix, e.g. `feat(cmdk): …`, `fix(theme): …`.
