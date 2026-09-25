@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, FileDown } from "lucide-react";
 import { social } from "@/config/social";
@@ -23,9 +23,11 @@ const FACTS = [
 ];
 
 export function Hero() {
-  const [cardDragging, setCardDragging] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const slotRef = useRef<HTMLDivElement>(null);
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="relative flex min-h-dvh flex-col justify-center px-5 pb-16 pt-24 md:px-10"
     >
@@ -105,21 +107,16 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* index card, hung from a physics lanyard that fills the column */}
+        {/* index card, with the lanyard card resting in the space above it */}
         <motion.div
           custom={4}
           variants={reveal}
           initial="hidden"
           animate="show"
-          className="flex h-full min-h-[560px] flex-col"
+          className="flex h-full flex-col lg:min-h-[560px]"
         >
-          <div
-            className={`relative min-h-0 flex-1 ${cardDragging ? "overflow-visible" : "overflow-hidden"}`}
-          >
-            <div className={`absolute overflow-visible ${cardDragging ? "inset-[-150%]" : "inset-0"}`}>
-              <Lanyard onDragChange={setCardDragging} />
-            </div>
-          </div>
+          {/* where the card rests; the lanyard itself is drawn by the hero-wide canvas below */}
+          <div ref={slotRef} className="min-h-[440px] flex-1 lg:min-h-0" />
           <div className="brut relative">
             <div className="flex items-center justify-between border-b-[2.5px] border-pop-ink bg-pop px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-widest text-pop-ink">
               <span>Index card</span>
@@ -139,6 +136,9 @@ export function Hero() {
           </div>
         </motion.div>
       </div>
+
+      {/* viewport-fixed overlay: hangs from the Nav bar, never clipped when dragged */}
+      <Lanyard slotRef={slotRef} eventSource={sectionRef} />
     </section>
   );
 }

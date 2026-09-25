@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Canvas, extend, useFrame, useThree, type ThreeElement } from "@react-three/fiber";
 import { useGLTF, useTexture, Environment, Lightformer } from "@react-three/drei";
 import {
@@ -59,34 +59,60 @@ const FRONT_IMAGE_ASPECT = 1400 / 888; // public/lanyard/front.jpg's native size
 const CARD_KX = (FRONT_IMAGE_ASPECT * CARD_HALF_H * CARD_KY) / 0.8;
 const CARD_Y_OFFSET = CARD_HALF_H * (1 - CARD_KY);
 
-// resting-camera distance vs. dragging-camera distance — dragging pulls the
-// camera back by DRAG_ZOOM so the (separately enlarged, see Hero.tsx) canvas
-// gives the card room to swing without the resting card changing size
-const REST_Z = 13;
-const DRAG_ZOOM = 4;
+// on-screen pixels per world unit — what the card was tuned at in its old
+// 536px-tall slot canvas; narrow screens shrink it so the card fits the column
+const PX_PER_UNIT = 117;
+const pxPerUnit = (width: number) => Math.min(PX_PER_UNIT, width / 4);
+const HALF_FOV_TAN = Math.tan(THREE.MathUtils.degToRad(10));
+// meshline's attenuated width scales with canvas width/height while the card
+// scales with height only; this was the slot canvas's aspect the strap was tuned at
+const STRAP_TUNED_ASPECT = 0.85;
 
 // adapted from React Bits' Lanyard (https://reactbits.dev/components/lanyard) —
-// same rope-physics rig, trimmed to this site's fixed card texture and sized
-// to sit beside the Hero index card instead of filling the viewport.
-export function Lanyard({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) {
+// same rope-physics rig, trimmed to this site's fixed card texture. The canvas
+// is fixed over the whole viewport so the strap and a dragged card are never
+// clipped; `slotRef` marks where the card rests, and pointer events come from
+// `eventSource` so the (pointer-events-none) canvas never blocks the page.
+export function Lanyard({
+  slotRef,
+  eventSource,
+}: {
+  slotRef: RefObject<HTMLElement | null>;
+  eventSource: RefObject<HTMLElement | null>;
+}) {
+  const anchor = useRef(new THREE.Vector3());
+  const [start, setStart] = useState<[number, number] | null>(null);
   const [dragging, setDragging] = useState(false);
-  const handleDragChange = (d: boolean) => {
-    setDragging(d);
-    onDragChange?.(d);
-  };
 
   return (
-    <div className="relative h-full w-full">
+    // under the Nav bar at rest (so the strap tucks behind it), above it mid-drag
+    <div className={`pointer-events-none fixed inset-0 ${dragging ? "z-[60]" : "z-40"}`}>
       <Canvas
-        camera={{ position: [0, 0, REST_Z], fov: 20 }}
+        camera={{ position: [0, 0, 13], fov: 20 }}
         dpr={[1, 2]}
         gl={{ alpha: true }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), 0)}
+        eventSource={eventSource as RefObject<HTMLElement>}
+        onCreated={({ gl, setEvents }) => {
+          gl.setClearColor(new THREE.Color(0x000000), 0);
+          // events arrive from the hero section, so map client coords onto the canvas
+          setEvents({
+            compute: (e, s) => {
+              const r = s.gl.domElement.getBoundingClientRect();
+              s.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+              s.raycaster.setFromCamera(s.pointer, s.camera);
+            },
+          });
+        }}
       >
-        <CameraRig dragging={dragging} />
+        <LayoutRig
+          slotRef={slotRef}
+          sectionRef={eventSource}
+          anchor={anchor}
+          onFirst={(a) => setStart((s) => s ?? a)}
+        />
         <ambientLight intensity={Math.PI} />
         <Physics gravity={[0, -40, 0]} timeStep={1 / 60}>
-          <Band onDragChange={handleDragChange} />
+          {start && <Band start={start} anchor={anchor} onDragChange={setDragging} />}
         </Physics>
         <Environment blur={0.75}>
           <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -99,18 +125,48 @@ export function Lanyard({ onDragChange }: { onDragChange?: (dragging: boolean) =
   );
 }
 
-// pulls the camera back the moment a drag starts (matching the canvas's CSS
-// enlargement in Hero.tsx) so the resting card's on-screen size never jumps
-function CameraRig({ dragging }: { dragging: boolean }) {
-  const { camera } = useThree();
-  useEffect(() => {
-    camera.position.z = dragging ? REST_Z * DRAG_ZOOM : REST_Z;
+// every frame: sizes the camera so one world unit is PX_PER_UNIT pixels, and turns the slot's on-screen position into the strap
+// anchor — the hero's top edge (flush under the Nav bar) on desktop, the gap
+// above the slot on stacked mobile layouts — so the rig scrolls with the hero
+function LayoutRig({
+  slotRef,
+  sectionRef,
+  anchor,
+  onFirst,
+}: {
+  slotRef: RefObject<HTMLElement | null>;
+  sectionRef: RefObject<HTMLElement | null>;
+  anchor: RefObject<THREE.Vector3>;
+  onFirst: (a: [number, number]) => void;
+}) {
+  useFrame(({ camera, size }) => {
+    const slot = slotRef.current;
+    const section = sectionRef.current;
+    if (!slot || !section) return;
+    const s = slot.getBoundingClientRect();
+    const px = pxPerUnit(size.width);
+    camera.position.z = size.height / (2 * HALF_FOV_TAN * px);
     camera.updateProjectionMatrix();
-  }, [camera, dragging]);
+    const desktop = window.matchMedia("(min-width: 1024px)").matches;
+    const ax = s.left + s.width / 2;
+    // mobile: start in the grid gap above the slot so the card clears the index card
+    const ay = desktop ? section.getBoundingClientRect().top : s.top - 36;
+    anchor.current.set((ax - size.width / 2) / px, (size.height / 2 - ay) / px, 0);
+    onFirst([anchor.current.x, anchor.current.y]);
+  });
   return null;
 }
 
-function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) {
+function Band({
+  start,
+  anchor,
+  onDragChange,
+}: {
+  start: [number, number];
+  anchor: RefObject<THREE.Vector3>;
+  onDragChange: (dragging: boolean) => void;
+}) {
+  const { size } = useThree();
   const band = useRef<THREE.Mesh>(null!);
   const fixed = useRef<RapierRigidBody>(null!);
   const j1 = useRef<RapierRigidBody>(null!);
@@ -198,9 +254,6 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
   });
   const [dragged, drag] = useState<THREE.Vector3 | false>(false);
 
-  useEffect(() => {
-    onDragChange?.(!!dragged);
-  }, [dragged, onDragChange]);
   const [hovered, hover] = useState(false);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
@@ -215,7 +268,10 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
     }
   }, [hovered, dragged]);
 
+  useEffect(() => onDragChange(!!dragged), [dragged, onDragChange]);
+
   useFrame((state, delta) => {
+    fixed.current?.setNextKinematicTranslation(anchor.current);
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
@@ -247,8 +303,8 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
 
   return (
     <>
-      <group position={[0, 4, 0]}>
-        <RigidBody ref={fixed} {...segmentProps} type="fixed" />
+      <group position={[start[0], start[1], 0]}>
+        <RigidBody ref={fixed} {...segmentProps} type="kinematicPosition" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
@@ -301,7 +357,7 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
           useMap={1}
           map={texture}
           repeat={[-4, 1]}
-          lineWidth={1}
+          lineWidth={(STRAP_TUNED_ASPECT * size.height) / size.width}
         />
       </mesh>
     </>
