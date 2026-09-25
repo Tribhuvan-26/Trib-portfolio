@@ -23,7 +23,7 @@ export function Contact() {
       title="Let's build"
       kicker="Got something worth shipping? I'm one message away."
     >
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.2fr_1fr]">
         <motion.a
           href={`mailto:${social.email}`}
           initial={{ opacity: 0, y: 16 }}
@@ -35,7 +35,7 @@ export function Contact() {
           <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-paper/80">
             Email me
           </span>
-          <span className="font-display text-3xl font-extrabold tracking-tight break-words md:text-5xl">
+          <span className="font-display text-3xl font-extrabold tracking-tight wrap-anywhere md:text-5xl">
             {social.email}
           </span>
           <span className="inline-flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest">
