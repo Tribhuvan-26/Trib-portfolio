@@ -29,7 +29,7 @@ export function Hero() {
       id="top"
       className="relative flex min-h-dvh flex-col justify-center px-5 pb-16 pt-24 md:px-10"
     >
-      <div className="mx-auto grid w-full max-w-[1200px] gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
+      <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
         <div>
           <motion.div
             custom={0}
@@ -52,7 +52,10 @@ export function Hero() {
             I build software
             <br />
             that holds up in{" "}
-            <span className="mark inline-block -rotate-1">the real world</span>.
+            {/* one box per phrase: inline-block hugs each phrase instead of a single
+                box stretching to the column width when it wraps */}
+            <span className="mark inline-block -rotate-1">the real</span>{" "}
+            <span className="mark inline-block -rotate-1">world.</span>
           </motion.h1>
 
           <motion.p
