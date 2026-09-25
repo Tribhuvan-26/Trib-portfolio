@@ -27,7 +27,7 @@ declare module "@react-three/fiber" {
 }
 
 const CARD_GLB = "/lanyard/card.glb";
-const LANYARD_PNG = "/lanyard/lanyard.png";
+const LANYARD_PNG = "/lanyard/lanyard.svg";
 const FRONT_JPG = "/lanyard/front.jpg";
 
 // same "editorial-brutalist dossier" palette as globals.css
