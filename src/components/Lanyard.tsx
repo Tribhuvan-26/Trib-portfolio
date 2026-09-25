@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable react/no-unknown-property */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, extend, useFrame, useThree, type ThreeElement } from "@react-three/fiber";
 import { useGLTF, useTexture, Environment, Lightformer } from "@react-three/drei";
@@ -129,7 +128,10 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
     nodes: Record<string, THREE.Mesh>;
     materials: Record<string, THREE.MeshPhysicalMaterial>;
   };
-  const texture = useTexture(LANYARD_PNG);
+  const texture = useTexture(LANYARD_PNG, (t) => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = 16;
+  });
   const frontTex = useTexture(FRONT_JPG);
 
   const cardMap = useMemo(() => {
@@ -189,9 +191,11 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
     return composite;
   }, [materials.base.map, frontTex]);
 
-  const [curve] = useState(
-    () => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]),
-  );
+  const [curve] = useState(() => {
+    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]);
+    c.curveType = "chordal";
+    return c;
+  });
   const [dragged, drag] = useState<THREE.Vector3 | false>(false);
 
   useEffect(() => {
@@ -225,7 +229,9 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
         const r = ref.current as Lerped;
         if (!r.lerped) r.lerped = new THREE.Vector3().copy(r.translation());
         const clampedDistance = Math.max(0.1, Math.min(1, r.lerped.distanceTo(r.translation())));
-        r.lerped.lerp(r.translation(), delta * (50 * clampedDistance));
+        // capped at 1: on a slow frame (delta > 20ms) an uncapped factor overshoots
+        // the target and, past 2, diverges — flinging the strap off-screen
+        r.lerped.lerp(r.translation(), Math.min(1, delta * (50 * clampedDistance)));
       });
       curve.points[0].copy(j3.current.translation());
       curve.points[1].copy((j2.current as RapierRigidBody & { lerped: THREE.Vector3 }).lerped);
@@ -238,8 +244,6 @@ function Band({ onDragChange }: { onDragChange?: (dragging: boolean) => void }) 
     }
   });
 
-  curve.curveType = "chordal";
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
   return (
     <>
