@@ -32,7 +32,7 @@ Spotify now-playing card.
 
 ## Run
 
-```bash
+bash
 npm install
 npm run dev      # http://localhost:3000
 npm run build    # production build
