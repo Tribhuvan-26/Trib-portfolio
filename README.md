@@ -1,4 +1,4 @@
-# Trib Portfolio — Editorial Brutalist Edition
+# Trib Portfolio — Brutalist Edition
 
 Personal portfolio site for **Tribhuvan** (AI/ML Engineer & Full-Stack Developer).
 Single-page Next.js app styled as a neo-brutalist "engineering dossier": risograph
